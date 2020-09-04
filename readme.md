@@ -8,7 +8,8 @@
 * Windows endpoints need to be able to reach the backend at TCP port 2222
 
 ## Steps
-* With a sudoer account, run: `curl -L https://raw.githubusercontent.com/jymcheong/OpenEDR/master/install.sh |bash`
+* With a sudoer account, run: 
+`curl -L https://raw.githubusercontent.com/jymcheong/OpenEDR/master/install.sh |bash`
 * Last powershell line (`$SFTPCONFURL=...`) from console can be pasted to endpoint for host agent installations. **Please use admin powershell session**.
 
 # Change Log
