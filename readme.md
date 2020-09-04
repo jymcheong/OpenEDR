@@ -7,7 +7,7 @@ Click thumbnail below to watch:
 **Use a sudoer account for Ubuntu or macOS docker host**. For Windows, please refer to https://docs.docker.com/docker-for-windows/wsl/). 
 
 * Tested backend installation ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) on Ubuntu 16-20 servers, with (at least) 1 vCPU, 3GB RAM & 50GB disk.
-* Host agents installation tested on Win10/server 2012R2 to 2019 64bit
+* Host agents installation tested on Win10 & Server 2012R2 to 2019 64bit
 * Windows endpoints need to be able to reach the backend at TCP port 2222 & 8081
 
 ## Installation Steps
