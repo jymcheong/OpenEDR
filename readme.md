@@ -8,10 +8,17 @@ Click thumbnail below to watch:
 
 * Tested backend installation ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) on Ubuntu 16-20 servers, with (at least) 1 vCPU, 3GB RAM & 50GB disk.
 * Host agents installation tested on Win10/server 2012R2 to 2019 64bit
-* Windows endpoints need to be able to reach the backend at TCP port 2222
+* Windows endpoints need to be able to reach the backend at TCP port 2222 & 8081
 
-## Steps
-* With a sudoer account, run: 
+## Installation Steps
+With a sudoer account, install the backend with: 
 
 `curl -L https://raw.githubusercontent.com/jymcheong/OpenEDR/master/install.sh |bash`
-* Last powershell line (`$SFTPCONFURL=...`) from console can be pasted to endpoint for host agent installations. **Please use admin powershell session**.
+
+Use the output from the backend installation step for endpoint side installation. 
+
+```
+$SFTPCONFURL='http://<YOUR_IP_ADDRESS>:8081/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))
+```
+
+The last line of the output is a powershell command  that can be pasted to endpoint for host agent installations. **Please use admin powershell session**.
