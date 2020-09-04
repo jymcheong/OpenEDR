@@ -56,7 +56,7 @@ if [ ! -d /orientdb/databases/OSystem ]; then
     console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; import database /openedrserver/backend/exportScripts/processSequence.json -merge=true -migrateLinks=false -rebuildIndexes=false;"
     
     echo "Importing CommandLineClusters"
-    console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; import database /openedrserver/backend/exportScripts/CommandLineClusters.json -merge=true -migrateLinks=false -rebuildIndexes=false;"
+    console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; import database /openedrserver/backend/exportScripts/commandLineClusters.json -merge=true -migrateLinks=false -rebuildIndexes=false;"
 
     echo "Adding root & writer accounts..."
     console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; update ouser set password='$ORIENTDB_WRITER_PASSWORD' where name = 'writer';"
