@@ -1,0 +1,34 @@
+#!/bin/bash
+
+exit_script() {
+  echo "P1: Caught sigterm in p1, sending TERM to p2"
+  kill -TERM $child
+  wait $child
+}
+
+trap exit_script SIGINT SIGTERM
+
+cd /openedrserver
+rm /openedrserver/backend/sftp/uploads/readme.md
+if [ ! -d node_modules ]; then
+    echo "Installing node_modules once..."
+    # for images that are slim & cannot compile
+    tar xvf node_modules.tgz
+    # some modules (eg. orientjs) need compiling & python, some image lack tools...
+    #npm install    
+fi
+
+echo "Wait for OrientDB to initialize..."
+while [ ! -f orientdb/import_completed ]; do
+  sleep 10 # orientdb/entrypoint will write this file upon successful schema & functions import
+done 
+
+echo "Checking OrientDB status..."
+while ! echo "" 2>/dev/null > /dev/tcp/orientdb/2424 ; do
+  echo "Waiting for 5 secs..."
+  sleep 5
+done
+
+pm2-runtime start pm2.json &
+child=$!
+wait $child

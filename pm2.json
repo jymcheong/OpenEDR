@@ -1,0 +1,28 @@
+{
+    "apps": [
+        {
+            "name": "frontend",
+            "script": "frontend/frontend.js"          
+        },
+        {
+            "name": "dashboard",
+            "script": "frontend/dashboard/dashboardController.js"
+        },
+        {
+            "name": "response",
+            "script": "backend/startResponse.js"
+        },
+        {
+            "name": "profiling",
+            "script": "backend/startProfiling.js"
+        },
+        {
+            "name": "detection",
+            "script": "backend/startDetection.js"
+        },
+        {
+            "name": "insertEvent",
+            "script": "backend/insertEvent.js"
+        }
+    ]
+}

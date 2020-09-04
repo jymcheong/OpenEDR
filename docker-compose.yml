@@ -1,0 +1,122 @@
+version: '2'
+services:
+  onewaysftp:
+    image: 'jymcheong/openedr:sftp'
+    container_name: onewaysftp
+    
+    # tried very hard to use non-root, somehow not working
+    #user: ${UID}:0
+
+    # Disable this since bindfs need to start before this container
+    # see manage/mountUploads.sh script
+    #restart: always
+    command:
+      - 'uploader::1001'
+    volumes:
+      - './backend/sftp/log:/var/log'
+      - './backend/sftp/keys:/etc/ssh/keys'
+      - './backend/sftp/uploads:/home/uploader/uploads'
+      # corresponds to .env C2_PATH=/openedrserver/backend/sftp/response/
+      - './backend/sftp/response:/home/uploader/response:ro'
+      - './backend/sftp/scripts:/etc/sftp.d'
+    ports:
+      - "${SFTP_HOST}:2222:2222"
+
+  orientdb:
+    # image: 'jymcheong/openedr:orientdb' # based on 3.0.28
+    image: 'orientdb:3.0.33' # note 3.1.X won't work on macOS docker but works in linux
+    command: /entrypoint # this is to override for official images
+    container_name: orientdb
+    # means map current user to container's root
+    user: ${UID}:0
+    restart: always
+    volumes:
+      - './orientdb/databases:/orientdb/databases'
+      - './orientdb/orient.pid:/orientdb/bin/orient.pid'
+      - './orientdb/backup:/orientdb/backup'
+      - './orientdb/config:/orientdb/config'
+      - './:/openedrserver'            
+      - './orientdb/entrypoint:/entrypoint'
+      - './orientdb/log:/orientdb/log'
+    networks:
+        - openedr-tier
+    ports:
+      # for security, ODB API port is bind to localhost
+      # change it accordingly for your needs
+      - '127.0.0.1:2424:2424'
+      - '${FRONTEND_IP}:2480:2480'
+    depends_on:
+        - onewaysftp
+        
+  wekandb:
+    image: mongo:4.2.7
+    container_name: wekan-db
+    user: ${UID}:0
+    restart: always
+    entrypoint: /entrypoint
+    networks:
+      - openedr-tier
+    expose:
+      - 27017
+    ports: # useful for debugging, no need for production
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - ./frontend/wekanMods/dump:/dump
+      - ./frontend/wekanMods/db:/data/db
+      - ./frontend/wekanMods/startMongo.sh:/entrypoint
+
+  wekan:
+    #-------------------------------------------------------------------------------------
+    # Based on v3.19 Wekan - modifed cardDetails.styl to autowrap long lines
+    image: jymcheong/openedr:frontend
+    #-------------------------------------------------------------------------------------
+    container_name: wekan-app
+    user: ${UID}:0
+    restart: always
+    #volumes: 
+    #  - ./entrypoint:/entrypoint
+    networks:
+      - openedr-tier
+    
+    ports:
+      # for security, this investigation interface is bind to localhost
+      # change it accordingly for your needs
+      # Note that WEKAN_URL set in .env should resolve to the chosen IP address
+      - ${FRONTEND_IP}:${FRONTEND_PORT}:8080
+    environment:
+      - MONGO_URL=mongodb://wekan-db:27017/wekan
+      - ROOT_URL=http://${FRONTEND_IP}:${FRONTEND_PORT}  #   see ./openedrserver/.env
+      - MAIL_URL=smtp://<mail_url>:25/?ignoreTLS=true&tls={rejectUnauthorized:false}
+      - MAIL_FROM=Wekan Notifications <noreply.wekan@mydomain.com>
+      - WITH_API=true
+      - RICHER_CARD_COMMENT_EDITOR=false
+      - SCROLLINERTIA=0
+      - SCROLLAMOUNT=auto
+      - CARD_OPENED_WEBHOOK_ENABLED=true
+      - BIGEVENTS_PATTERN=NONE
+      - BROWSER_POLICY_ENABLED=true
+
+    depends_on:
+      - wekandb
+      
+  openedr:
+    image: keymetrics/pm2:14-slim
+    container_name: openedr-app
+    user: ${UID}:0
+    restart: always
+    entrypoint: /openedrserver/entrypoint
+    volumes: 
+      - ./:/openedrserver
+      - ./.pm2:/.pm2      
+    networks:
+      - openedr-tier
+    depends_on:
+      - orientdb
+
+volumes:
+  wekan-db:
+    driver: local
+  
+networks:
+  openedr-tier:
+    driver: bridge

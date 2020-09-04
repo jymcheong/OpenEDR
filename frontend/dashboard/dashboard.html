@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Client Zone Monitoring Dashboard</title>
+    <script>
+      const wsLocation = 'ws://127.0.0.1:8800/'
+      var ws = null
+      function connectWS(path) {
+        ws = new WebSocket(wsLocation);
+        ws.onclose = function() { setTimeout(function(){connectWS(wsLocation)}, 3000);}
+        ws.onmessage = function(event) {
+            var cases = JSON.parse(event.data)
+            for(i = 1; i <= 4; i++) {
+              document.getElementById("nc" + i.toString()).innerHTML = cases[i.toString()]["new"];
+              document.getElementById("inv" + i.toString()).innerHTML = cases[i.toString()]["working"];
+              document.getElementById("cl" + i.toString()).innerHTML = cases[i.toString()]["closed"];
+              if(document.getElementById("nc" + i.toString()).innerHTML == 0) {
+                document.getElementById("nc" + i.toString()).className = "box sev" + i.toString()
+              }
+              else {
+                    document.getElementById("nc"+i.toString()).className = "box sev1 blink_me_sev" + i.toString()
+              }
+            }
+        }
+      }
+      connectWS(wsLocation) 
+  </script>
+<meta charset="utf-8">
+<style>
+  * {
+      font-family: sans-serif;
+  }
+  
+	body {
+		margin: 50px;
+    background-color: #2C3E50;
+	}
+	.wrapper {
+    width: 100%;
+		display: grid;
+    grid-gap: 30px;
+    grid-template-columns: repeat(5, 18%);
+		background-color: #2C3E50;
+		color: #2C3E50;
+	}
+
+	.box {
+		background-color: #2C3E50;
+		color: #fff;
+		border-radius: 5px;
+		padding: 20px;
+		font-size: 7vw;
+    text-align: center;
+	}
+
+  .label {
+    padding: 20% 0;
+    font-size: 2.5vw;
+    text-align: left;
+  }
+  
+  .sev1 {
+    color: rgb(180, 180, 180);
+  }
+  .sev2 {
+    color: rgb(243, 255, 202);
+  }
+  
+  .sev3 {
+    color: rgb(249, 179, 255);
+  }
+
+  .sev4 {
+    color: rgba(255, 139, 139, 0.781);
+  }
+
+.blink_me_sev1 {
+  animation: blinker 2s linear infinite;
+}
+
+.blink_me_sev2 {
+  animation: blinker 1.5s linear infinite;
+}
+
+.blink_me_sev3 {
+  animation: blinker 1s linear infinite;
+}
+
+.blink_me_sev4 {
+  animation: blinker 0.5s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+</style>
+</head>
+ <body>
+	 <div class="wrapper">
+		<div class="box label">Severity Level</div>
+		<div class="box b sev1">1</div>
+		<div class="box c sev2">2</div>
+		<div class="box d sev3">3</div>
+		<div class="box e sev4">4</div>
+    <div class="box label">New Cases</div>
+    <div id="nc1" class="box sev1">0</div>
+		<div id="nc2" class="box sev2">0</div>
+		<div id="nc3" class="box sev3">0</div>
+    <div id="nc4" class="box sev4">0</div>
+    <div class="box label">Investigating</div>
+    <div id="inv1" class="box sev1">0</div>
+		<div id="inv2" class="box sev2">0</div>
+		<div id="inv3" class="box sev3">0</div>
+    <div id="inv4" class="box sev4">0</div>
+    <div class="box label">Closed</div>
+    <div id="cl1" class="box sev1">0</div>
+		<div id="cl2" class="box sev2">0</div>
+		<div id="cl3" class="box sev3">0</div>
+		<div id="cl4" class="box sev4">0</div>    
+	</div>
+</body>
+</html>

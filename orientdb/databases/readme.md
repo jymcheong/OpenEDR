@@ -1,0 +1,1 @@
+This directory will be mapped to container's /orientdb/databases 

@@ -1,0 +1,16 @@
+version: '3'
+services:
+  onewaysftp:
+    image: 'jymcheong/openedr:sftp'
+    container_name: onewaysftp
+    command:
+      - 'uploader::1001'
+    volumes:
+      - './log:/var/log'
+      - './keys:/etc/ssh/keys'
+      - './uploads:/home/uploader/uploads'
+      - './response:/home/uploader/response:ro'
+      - './scripts:/etc/sftp.d'
+    ports:
+      - '2222:2222'
+      #- '10.244.33.18:2222:2222'
