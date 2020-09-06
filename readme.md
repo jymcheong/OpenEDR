@@ -22,3 +22,6 @@ $SFTPCONFURL='http://<YOUR_IP_ADDRESS>:8081/sftpconf.zip'; Set-ExecutionPolicy B
 ```
 
 The last line of the output is a powershell command  that can be pasted to endpoint for host agent installations. **Please use admin powershell session**.
+
+## Learn More
+https://github.com/jymcheong/OpenEDR/wiki
