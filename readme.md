@@ -15,13 +15,13 @@ With a sudoer account, install the backend with:
 
 `curl -L https://raw.githubusercontent.com/jymcheong/OpenEDR/master/install.sh |bash`
 
-Use the output from the backend installation step for endpoint side installation. 
+Use the output from the backend installation script looks similar to the following: 
 
 ```
 $SFTPCONFURL='http://<YOUR_IP_ADDRESS>:8081/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))
 ```
 
-The last line of the output is a powershell command  that can be pasted to endpoint for host agent installations. **Please use admin powershell session**.
+It is a powershell command  that can be pasted to endpoint for host agent installations. **Please use admin powershell session**.
 
 ## Learn More
 https://github.com/jymcheong/OpenEDR/wiki
