@@ -14,3 +14,4 @@ orientdb/log/*
 orientdb/orient.pid
 orientdb/config/orientdb-server-config.xml
 manage/mountUploads.sh
+backend/sftp/uploads/*
