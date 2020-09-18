@@ -3,6 +3,9 @@ Click thumbnail below to watch:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5YeH1RwzqXU/0.jpg)](https://www.youtube.com/watch?v=5YeH1RwzqXU)
 
+# Shout-Outs
+To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
+
 # Getting Started
 **Use a sudoer account for Ubuntu or macOS docker host**. For Windows, please refer to https://docs.docker.com/docker-for-windows/wsl/). 
 
