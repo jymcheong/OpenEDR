@@ -1,2 +1,17 @@
 
 backend/.vscode/settings.json
+node_modules/*
+.pm2/*
+.env
+backend/sftp/keys/*
+frontend/wekanMods/db/*
+backend/sftp/log/*
+frontend/wekanMods/dump/wekan/*
+backend/sftp/scripts/IPaddresses
+orientdb/databases/*
+orientdb/import_completed
+orientdb/log/*
+orientdb/orient.pid
+orientdb/config/orientdb-server-config.xml
+manage/mountUploads.sh
+backend/sftp/uploads/*
