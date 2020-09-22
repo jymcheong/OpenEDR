@@ -1,1 +1,1 @@
-This folder cannot be owned by root
+This folder is necessary for pm2 within container to run properly
