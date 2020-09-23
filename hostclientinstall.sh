@@ -13,7 +13,7 @@ echo "Please use powershell session with ADMIN rights, copy-&-paste the LAST lin
 MSG="\$SFTPCONFURL='http://$IPADDR:$PORT/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))"
 echo $MSG > ~/clientinstall/readme.txt
 
-sudo docker run -d -p $PORT:80 -v $PWD/readme.txt:/usr/share/caddy/index.html -v $PWD:/usr/share/caddy -v caddy_data:/data caddy
+sudo docker run -d --name configurationHosting -p $PORT:80 -v $PWD/readme.txt:/usr/share/caddy/index.html -v $PWD:/usr/share/caddy -v caddy_data:/data caddy
 
 echo ""
 echo $MSG
