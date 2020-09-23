@@ -15,5 +15,7 @@ echo $MSG > ~/clientinstall/readme.txt
 sudo docker run -d --name configurationHosting -p $PORT:80 -v $PWD/readme.txt:/usr/share/caddy/index.html -v $PWD:/usr/share/caddy -v caddy_data:/data caddy
 
 echo ""
-echo "Please use powershell session with ADMIN rights, copy-&-paste the LAST line\n & press enter to install at Windows endpoints:"
+echo "Please copy the LAST line (\$SFTP...), paste into an ADMIN powershell session" 
+echo "& press enter to install at Windows endpoints:"
+echo ""
 echo $MSG
