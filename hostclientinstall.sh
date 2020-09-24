@@ -12,7 +12,9 @@ cd $HOME/clientinstall
 MSG="\$SFTPCONFURL='http://$IPADDR:$PORT/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))"
 echo $MSG > ~/clientinstall/readme.txt
 
-sudo docker run -d --name configurationHosting -p $PORT:80 -v $PWD/readme.txt:/usr/share/caddy/index.html -v $PWD:/usr/share/caddy -v caddy_data:/data caddy
+UID=$(id -u)
+GID=$(id -g)
+sudo docker run -d --name configurationHosting --user $UID:$GID -p $PORT:80 --sysctl net.ipv4.ip_unprivileged_port_start=0 -v $PWD/readme.txt:/usr/share/caddy/index.html -v $PWD:/usr/share/caddy -v caddy_data:/data caddy
 
 echo ""
 echo "Please copy the LAST line (\$SFTP...), paste into an ADMIN powershell session" 
