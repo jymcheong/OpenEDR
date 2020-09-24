@@ -3,7 +3,7 @@
 # This script automates the hosting of windows-clients installation powershell script
 # & the necessary SFTP configurations for event files upload.
 
-PORT=8081
+PORT=8888
 mkdir -p $HOME/clientinstall
 sleep 10 # wait for sftpconf.zip to appear, it is created within container's scripting
 cp ./backend/sftp/keys/sftpconf.zip $HOME/clientinstall
