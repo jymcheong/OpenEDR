@@ -13,7 +13,9 @@ async function exportFunctions(){
     var output = '{"records":[';
     let results = await _session.query("select @this.toJSON() from OFunction").all();
     for(var i = 0; i < results.length; i++) {
-        output += results[i]['@this.toJSON()'] + ','
+        var line = JSON.parse(results[i]['@this.toJSON()']);
+        delete line["@rid"]
+        output += JSON.stringify(line) + ','
     }
 
     output = output.slice(0,-1) + "]}"
