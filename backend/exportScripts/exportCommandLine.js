@@ -16,6 +16,7 @@ async function exportFunctions(){
     for(var i = 0; i < results.length; i++) {
         var line = JSON.parse(results[i]['@this.toJSON()']);
         delete line["in_SimilarTo"]
+        delete line["@rid"]
         output += JSON.stringify(line) + ','
     }
     output = output.slice(0,-1) + "]}"

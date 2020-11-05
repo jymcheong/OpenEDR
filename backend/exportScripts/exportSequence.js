@@ -15,6 +15,7 @@ async function exportFunctions(){
     let results = await _session.query("select @this.toJSON() from seq").all();
     for(var i = 0; i < results.length; i++) {
         var line = JSON.parse(results[i]['@this.toJSON()']);
+        delete line["@rid"];
         delete line["in_hasSequence"];
         delete line["out_SequenceSighted"];
         output += JSON.stringify(line) + ','

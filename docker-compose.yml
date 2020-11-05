@@ -24,7 +24,9 @@ services:
 
   orientdb:
     # image: 'jymcheong/openedr:orientdb' # based on 3.0.28
-    image: 'orientdb:3.0.33' # note 3.1.X won't work on macOS docker but works in linux
+    # image: 'orientdb:3.0.33' # note 3.1.X won't work on macOS docker but works in linux
+    image: 'orientdb:3.0.34' # note 3.1.X won't work on macOS docker but works in linux
+    
     command: /entrypoint # this is to override for official images
     container_name: orientdb
     # means map current user to container's root
