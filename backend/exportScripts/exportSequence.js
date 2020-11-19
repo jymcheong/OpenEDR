@@ -12,7 +12,7 @@ const connectODB = require('../../common/orientdb').connectODB;
 async function exportFunctions(){
     _session = await connectODB()
     var output = '{"records":[';
-    let results = await _session.query("select @this.toJSON() from seq").all();
+    let results = await _session.query("select @this.toJSON() from seq where BaseLined = true").all();
     for(var i = 0; i < results.length; i++) {
         var line = JSON.parse(results[i]['@this.toJSON()']);
         delete line["@rid"];
