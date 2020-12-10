@@ -3,7 +3,6 @@ const path = require('path');
 const yaml = require('js-yaml');
 const connectODB = require('../../common/orientdb').connectODB;
 
-
 var searchRecursive = function(dir, pattern) {
   // This is where we store pattern matches of all files inside the directory
   var results = [];
@@ -30,24 +29,37 @@ var searchRecursive = function(dir, pattern) {
   return results;
 };
 
+function parseYML(fullpath){
+  return new Promise(async (resolve,reject) => {
+    try {
+      let contents = fs.readFileSync(fullpath, 'utf8').replace('---\n','').replace('---','')
+      const doc = yaml.safeLoad(contents);
+      resolve(doc)
+    }
+    catch (e) {
+      console.log(e);
+      reject(e);
+    }  
+  })
+}
+
+
 (async function(){
   _session = await connectODB()
   console.log('connected to target ODB!')
 
   var files = searchRecursive('./backend/LOLimport/yml', '.yml'); // replace dir and pattern
   for(var i = 0; i < files.length; i++){
-    try {
-      // there's one ---\n at the beginning, one --- at the end... they break the parsing
-      let contents = fs.readFileSync(files[i], 'utf8').replace('---\n','').replace('---','')
-      const doc = yaml.safeLoad(contents);
-      doc.Commands.forEach(async element => {
+      try {
+        const doc = await parseYML(files[i]);
+        doc.Commands.forEach(async element => {
           console.log(element.Command)
           // import to ODB with UPSERT to avoid repeated CommandLine
           let c = await _session.command('UPDATE clc SET Score = 20, CommandLine = :c, MitreLink = :l UPSERT RETURN AFTER @rid WHERE CommandLine = :c', { params : {c: element.Command, l: element.MitreLink}}).all()    
           console.log(c)
-      });
-    } catch (e) {
-      console.log(e);
+        })
+      } catch (e){
+            console.log(e)
+       }
     }
-  }
-})();
+  })();
