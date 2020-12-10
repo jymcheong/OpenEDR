@@ -48,7 +48,7 @@ function parseYML(fullpath){
   _session = await connectODB()
   console.log('connected to target ODB!')
 
-  var files = searchRecursive('./backend/LOLimport/yml', '.yml'); // replace dir and pattern
+  var files = searchRecursive('./backend/LOLimport/data', '.yml'); // replace dir and pattern
   for(var i = 0; i < files.length; i++){
       try {
         const doc = await parseYML(files[i]);
@@ -62,4 +62,4 @@ function parseYML(fullpath){
             console.log(e)
        }
     }
-  })();
+})();
