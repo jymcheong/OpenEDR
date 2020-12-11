@@ -47,19 +47,21 @@ function parseYML(fullpath){
 (async function(){
   _session = await connectODB()
   console.log('connected to target ODB!')
-
-  var files = searchRecursive('./backend/LOLimport/data', '.yml'); // replace dir and pattern
+  var count = 0;
+  var files = searchRecursive('./backend/import/LOLdata', '.yml'); // replace dir and pattern
   for(var i = 0; i < files.length; i++){
       try {
         const doc = await parseYML(files[i]);
         doc.Commands.forEach(async element => {
           console.log(element.Command)
           // import to ODB with UPSERT to avoid repeated CommandLine
-          let c = await _session.command('UPDATE clc SET Score = 20, CommandLine = :c, MitreLink = :l UPSERT RETURN AFTER @rid WHERE CommandLine = :c', { params : {c: element.Command, l: element.MitreLink}}).all()    
-          console.log(c)
+          //let c = await _session.command('UPDATE clc SET Score = 20, CommandLine = :c, MitreLink = :l UPSERT RETURN AFTER @rid WHERE CommandLine = :c', { params : {c: element.Command, l: element.MitreLink}}).all()    
+          //console.log(c)
+          count++
         })
       } catch (e){
             console.log(e)
        }
     }
+    console.log(count)
 })();
