@@ -57,7 +57,7 @@ function parseYML(fullpath){
           console.log(element.Command)
           count++
           // import to ODB with UPSERT to avoid repeated CommandLine
-          _session.command('UPDATE clc SET Score = 20, CommandLine = :c, MitreLink = :l UPSERT RETURN AFTER @rid WHERE CommandLine = :c', { params : {c: element.Command, l: element.MitreLink}}).all()              
+          _session.command('UPDATE clc SET Score = 30, CommandLine = :c, MitreLink = :l UPSERT RETURN AFTER @rid WHERE CommandLine = :c', { params : {c: element.Command, l: element.MitreLink}}).all()              
         })
       } catch (e){
             console.log(files[i])
