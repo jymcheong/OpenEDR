@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const yaml = require('js-yaml');
+const yaml = require('yaml');
 const connectODB = require('../../common/orientdb').connectODB;
 
 var searchRecursive = function(dir, pattern) {
@@ -32,8 +32,9 @@ var searchRecursive = function(dir, pattern) {
 function parseYML(fullpath){
   return new Promise(async (resolve,reject) => {
     try {
-      let contents = fs.readFileSync(fullpath, 'utf8').replace('---\n','').replace('---','')
-      const doc = yaml.safeLoad(contents);
+      // unfortunately replaceAll is not available
+      let contents = fs.readFileSync(fullpath, 'utf8').replace('---','').replace('---','').trim()
+      const doc = yaml.parse(contents);
       resolve(doc)
     }
     catch (e) {
@@ -54,12 +55,12 @@ function parseYML(fullpath){
         const doc = await parseYML(files[i]);
         doc.Commands.forEach(async element => {
           console.log(element.Command)
-          // import to ODB with UPSERT to avoid repeated CommandLine
-          //let c = await _session.command('UPDATE clc SET Score = 20, CommandLine = :c, MitreLink = :l UPSERT RETURN AFTER @rid WHERE CommandLine = :c', { params : {c: element.Command, l: element.MitreLink}}).all()    
-          //console.log(c)
           count++
+          // import to ODB with UPSERT to avoid repeated CommandLine
+          _session.command('UPDATE clc SET Score = 20, CommandLine = :c, MitreLink = :l UPSERT RETURN AFTER @rid WHERE CommandLine = :c', { params : {c: element.Command, l: element.MitreLink}}).all()              
         })
       } catch (e){
+            console.log(files[i])
             console.log(e)
        }
     }

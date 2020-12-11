@@ -15,7 +15,8 @@
     "mongodb": "^3.2.7",
     "orientjs": "^3.0.8",
     "squirrelly": "^7.7.0",
-    "ws": "^7.2.0"
+    "ws": "^7.2.0",
+    "yaml": "^1.10.0"
   },
   "devDependencies": {},
   "scripts": {

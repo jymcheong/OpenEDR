@@ -10,3 +10,5 @@ Relative to the folder of this Readme file, there's a `data` sub-directory.
 
 ## Run `searchNimport.js`
 This script looks recursively for *.yml to parse & import.
+
+`node searchNimport.js`
