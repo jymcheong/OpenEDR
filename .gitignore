@@ -16,3 +16,4 @@ orientdb/config/orientdb-server-config.xml
 manage/mountUploads.sh
 backend/sftp/uploads/*
 *.yml
+backend/import/LOLdata/*
