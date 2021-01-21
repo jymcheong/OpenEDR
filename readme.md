@@ -18,6 +18,8 @@ With a sudoer account, install the backend with:
 
 `curl -L https://raw.githubusercontent.com/jymcheong/OpenEDR/master/install.sh |bash`
 
+*PLEASE USE A UBUNTU 16-20 SERVER or VM-Server*
+
 Use the output from the backend installation script looks similar to the following: 
 
 ```
