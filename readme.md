@@ -11,7 +11,7 @@ To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
 
 * Tested backend installation ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) on Ubuntu 16-20.04 LTS servers, with (at least) 1 vCPU, 3GB RAM & 50GB disk.
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit
-* Windows endpoints need to be able to reach the backend at TCP port 2222 & 8888
+* Windows endpoints need to be able to reach the backend at TCP port 2222 & 8888 (Pls check firewall(s) settings)
 
 ## Installation Steps
 With a sudoer account, install the backend with: 
