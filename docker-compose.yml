@@ -16,6 +16,7 @@ services:
       - './backend/sftp/log:/var/log'
       - './backend/sftp/keys:/etc/ssh/keys'
       - './backend/sftp/uploads:/home/uploader/uploads'
+      - './backend/sftp/tobeinserted:/home/tobeinserted'
       # corresponds to .env C2_PATH=/openedrserver/backend/sftp/response/
       - './backend/sftp/response:/home/uploader/response:ro'
       - './backend/sftp/scripts:/etc/sftp.d'
