@@ -47,6 +47,7 @@ echo "SFTP_HOST=$IPADDR" >> .env
 # sftp/scripts/generateSFTPconf.sh will read this file
 # to generate sftpconf.zip, which is needed at client-side
 echo $IPADDR > ./backend/sftp/scripts/IPaddresses
+echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
 
 #if [ -f "/usr/bin/bindfs" ]; then    
 #    echo "Mounting write-only uploads directory..."
