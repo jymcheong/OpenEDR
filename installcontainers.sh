@@ -47,23 +47,9 @@ echo "SFTP_HOST=$IPADDR" >> .env
 # sftp/scripts/generateSFTPconf.sh will read this file
 # to generate sftpconf.zip, which is needed at client-side
 echo $IPADDR > ./backend/sftp/scripts/IPaddresses
-echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
 
-#if [ -f "/usr/bin/bindfs" ]; then    
-#    echo "Mounting write-only uploads directory..."
-    # this `uploads` directory is mounted to onewaysftp container...
-    # --delete-deny  not available in Ubuntu 16
-#    if ! bindfs |grep delete-deny > /dev/null 2>&1; then
-#        sudo bindfs --create-for-user=$USER --force-group=$GROUPS --create-with-perms=g+w,o-rw -p o+w -o nonempty $PWD/backend/sftp/tobeinserted $PWD/backend/sftp/uploads
-#    else
-#        sudo bindfs --delete-deny --create-for-user=$USER --force-group=$GROUPS --create-with-perms=g+w,o-rw -p o+w -o nonempty $PWD/backend/sftp/tobeinserted $PWD/backend/sftp/uploads
-#    fi
-    # using docker to mount sftp/response directory as read-only
-#    echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
-#else
-    # no bindfs, use read-write directory directly
-#    echo "UPLOAD_PATH=./backend/sftp/uploads" >> .env
-#fi
+# sftp container will shift uploaded files & signal folders into here
+echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
 
 touch orientdb/orient.pid
 # docker-compose will take care of the rest of the services
