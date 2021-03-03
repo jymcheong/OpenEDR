@@ -18,6 +18,7 @@ COPY files/rsyslog.conf /etc/rsyslog.conf
 COPY files/sshd_config /etc/ssh/sshd_config
 COPY files/create-sftp-user /usr/local/bin/
 COPY files/incronRule /
+COPY files/incron.sh /
 COPY files/entrypoint /
 
 EXPOSE 22
