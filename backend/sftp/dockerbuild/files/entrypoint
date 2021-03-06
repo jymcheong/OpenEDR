@@ -103,6 +103,7 @@ if $startSshd; then
     log "Executing sshd"
     chmod g+rw /home/tobeinserted/
     incrontab -u root /incronRule
+    incrontab -d
     incrond
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
     #exec /usr/sbin/sshd -D -e
