@@ -14,7 +14,7 @@ To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
 * Windows endpoints needs TCP port 2222 & 8888 to reach backend (Pls check firewall(s) settings)
 
 ## Installation Steps
-With a sudoer account, install the backend with: 
+With a sudoer account (but **DO NOT preceed command with `sudo`**), install the backend with: 
 
 `curl -L https://raw.githubusercontent.com/jymcheong/OpenEDR/master/install.sh |bash`
 
