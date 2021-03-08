@@ -11,7 +11,7 @@ exit_script() {
 
 trap exit_script SIGINT SIGTERM
 
-if [ ! -d /orientdb/databases/OSystem ]; then
+if [ ! -f /openedrserver/orientdb/import_completed ]; then
     # Reset the configuration 
     cp /orientdb/config/orientdb-server-config.xml.template /orientdb/config/orientdb-server-config.xml
     

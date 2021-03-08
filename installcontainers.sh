@@ -12,7 +12,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Using $IPADDR"
     echo "installing dependencies..."
     sudo apt-get update  
-    sudo apt install git zip bindfs curl tmux moreutils net-tools python -y 
+    sudo apt install git zip bindfs curl tmux moreutils net-tools python acl -y 
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable edge"
     sudo apt-get update
@@ -22,6 +22,9 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # sudo usermod -aG docker $USER         
     echo "starting docker service..."
     sudo /etc/init.d/docker start
+    sudo chown 1001:0 ./backend/sftp/uploads
+    sudo chmod g+s ./backend/sftp/uploads
+    sudo setfacl -m d:u::-w- ./backend/sftp/uploads
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Better to get user to install, don't want to be liable for anything here
     command -v docker >/dev/null 2>&1 || { echo >&2 "Please install docker.  Aborting..."; exit 1; }
@@ -45,21 +48,8 @@ echo "SFTP_HOST=$IPADDR" >> .env
 # to generate sftpconf.zip, which is needed at client-side
 echo $IPADDR > ./backend/sftp/scripts/IPaddresses
 
-if [ -f "/usr/bin/bindfs" ]; then    
-    echo "Mounting write-only uploads directory..."
-    # this `uploads` directory is mounted to onewaysftp container...
-    # --delete-deny  not available in Ubuntu 16
-    if ! bindfs |grep delete-deny > /dev/null 2>&1; then
-        sudo bindfs --create-for-user=$USER --force-group=$GROUPS --create-with-perms=g+w,o-rw -p o+w -o nonempty $PWD/backend/sftp/tobeinserted $PWD/backend/sftp/uploads
-    else
-        sudo bindfs --delete-deny --create-for-user=$USER --force-group=$GROUPS --create-with-perms=g+w,o-rw -p o+w -o nonempty $PWD/backend/sftp/tobeinserted $PWD/backend/sftp/uploads
-    fi
-    # using docker to mount sftp/response directory as read-only
-    echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
-else
-    # no bindfs, use read-write directory directly
-    echo "UPLOAD_PATH=./backend/sftp/uploads" >> .env
-fi
+# sftp container will shift uploaded files & signal folders into here
+echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
 
 touch orientdb/orient.pid
 # docker-compose will take care of the rest of the services
