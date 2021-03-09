@@ -17,7 +17,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Using $IPADDR"
     echo "installing dependencies..."
     sudo apt-get update  
-    sudo apt install git zip bindfs curl tmux moreutils net-tools python acl -y 
+    sudo apt install git zip curl tmux moreutils net-tools python acl -y 
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable edge"
     sudo apt-get update
