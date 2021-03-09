@@ -7,6 +7,11 @@ FRONTEND_IP=127.0.0.1
 FRONTEND_PORT=8080
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo fuser /var/lib/dpkg/lock
+    if [ $? -eq 0 ]; then
+        echo "Unattended upgrade may be running, we cannot proceed..."
+        exit
+    fi
     # Get the first IP address
     IPADDR=$(hostname -I | awk '{print $1}')
     echo "Using $IPADDR"
