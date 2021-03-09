@@ -7,12 +7,17 @@ FRONTEND_IP=127.0.0.1
 FRONTEND_PORT=8080
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo fuser /var/lib/dpkg/lock
+    if [ $? -eq 0 ]; then
+        echo "Unattended upgrade may be running, we cannot proceed..."
+        exit
+    fi
     # Get the first IP address
     IPADDR=$(hostname -I | awk '{print $1}')
     echo "Using $IPADDR"
     echo "installing dependencies..."
     sudo apt-get update  
-    sudo apt install git zip bindfs curl tmux moreutils net-tools python acl -y 
+    sudo apt install git zip curl tmux moreutils net-tools python acl -y 
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable edge"
     sudo apt-get update
