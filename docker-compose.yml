@@ -1,28 +1,5 @@
 version: '2'
 services:
-  onewaysftp:
-    image: 'jymcheong/openedr:sftp'
-    container_name: onewaysftp
-    
-    # tried very hard to use non-root, somehow not working
-    #user: ${UID}:0
-
-    # Disable this since bindfs need to start before this container
-    # see manage/mountUploads.sh script
-    #restart: always
-    command:
-      - 'uploader::1001'
-    volumes:
-      - './backend/sftp/log:/var/log'
-      - './backend/sftp/keys:/etc/ssh/keys'
-      - './backend/sftp/uploads:/home/uploader/uploads'
-      - './backend/sftp/tobeinserted:/home/tobeinserted'
-      # corresponds to .env C2_PATH=/openedrserver/backend/sftp/response/
-      - './backend/sftp/response:/home/uploader/response:ro'
-      - './backend/sftp/scripts:/etc/sftp.d'
-    ports:
-      - "${SFTP_HOST}:2222:2222"
-
   orientdb:
     # image: 'jymcheong/openedr:orientdb' # based on 3.0.28
     # image: 'orientdb:3.0.33' # note 3.1.X won't work on macOS docker but works in linux
@@ -48,9 +25,21 @@ services:
       # change it accordingly for your needs
       - '127.0.0.1:2424:2424'
       - '${FRONTEND_IP}:2480:2480'
+
+  openedr:
+    image: keymetrics/pm2:14-slim
+    container_name: openedr-app
+    user: ${UID}:0
+    restart: always
+    entrypoint: /openedrserver/entrypoint
+    volumes: 
+      - ./:/openedrserver
+      - ./.pm2:/.pm2      
+    networks:
+      - openedr-tier
     depends_on:
-        - onewaysftp
-        
+      - orientdb
+
   wekandb:
     image: mongo:4.2.7
     container_name: wekan-db
@@ -98,23 +87,33 @@ services:
       - CARD_OPENED_WEBHOOK_ENABLED=true
       - BIGEVENTS_PATTERN=NONE
       - BROWSER_POLICY_ENABLED=true
-
     depends_on:
       - wekandb
-      
-  openedr:
-    image: keymetrics/pm2:14-slim
-    container_name: openedr-app
-    user: ${UID}:0
+  
+  onewaysftp:
+    image: 'jymcheong/openedr:sftp'
+    container_name: onewaysftp
+    
+    # tried very hard to use non-root, somehow not working
+    #user: ${UID}:0
+
+    # Disable this since bindfs need to start before this container
+    # see manage/mountUploads.sh script
     restart: always
-    entrypoint: /openedrserver/entrypoint
-    volumes: 
-      - ./:/openedrserver
-      - ./.pm2:/.pm2      
-    networks:
-      - openedr-tier
+    command:
+      - 'uploader::1001'
+    volumes:
+      - './backend/sftp/log:/var/log'
+      - './backend/sftp/keys:/etc/ssh/keys'
+      - './backend/sftp/uploads:/home/uploader/uploads'
+      - './backend/sftp/tobeinserted:/home/tobeinserted'
+      # corresponds to .env C2_PATH=/openedrserver/backend/sftp/response/
+      - './backend/sftp/response:/home/uploader/response:ro'
+      - './backend/sftp/scripts:/etc/sftp.d'
+    ports:
+      - "${SFTP_HOST}:2222:2222"
     depends_on:
-      - orientdb
+        - wekan
 
 volumes:
   wekan-db:
