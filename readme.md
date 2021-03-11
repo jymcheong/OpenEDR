@@ -9,14 +9,16 @@ To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
 # Getting Started
 **Use a sudoer account for Ubuntu or macOS docker host**. For Windows, please refer to https://github.com/jymcheong/OpenEDR/issues/3). 
 
-* Tested backend installation ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) on Ubuntu 16-20 servers, with (at least) 1 vCPU, 3GB RAM & 50GB disk.
+* Tested backend installation ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) on Ubuntu 16-20.04 LTS servers, with (at least) 1 vCPU, 3GB RAM & 50GB disk.
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit
-* Windows endpoints need to be able to reach the backend at TCP port 2222 & 8888
+* Windows endpoints needs TCP port 2222 & 8888 to reach backend (Pls check firewall(s) settings)
 
 ## Installation Steps
-With a sudoer account, install the backend with: 
+With a sudoer account (but **DO NOT preceed command with `sudo`**), install the backend with: 
 
 `curl -L https://raw.githubusercontent.com/jymcheong/OpenEDR/master/install.sh |bash`
+
+**PLEASE USE A UBUNTU 16-20 SERVER, either physical or Virtual Machine.** [But why not on Ubuntu/whatever-linux desktop directly?](https://github.com/jymcheong/OpenEDR/issues/15)
 
 Use the output from the backend installation script looks similar to the following: 
 
