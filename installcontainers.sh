@@ -40,7 +40,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     brew list bindfs || brew install bindfs
     # otherwise orientdb 3.0.3X & 3.1.X onwards will fail to start
     # see https://github.com/orientechnologies/orientdb/issues/9278
-    sed -i 's/MORE_OPTIONS=""/MORE_OPTIONS="-Dstorage.disk.useNativeOsAPI=false"/g' orientdb/entrypoint
+    cat $PWD/orientdb/entrypoint.macOS > $PWD/orientdb/entrypoint
 fi
 
 echo "UID=$UID" > .env

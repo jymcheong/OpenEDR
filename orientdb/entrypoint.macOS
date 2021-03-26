@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# macOS needs -Dstorage.disk.useNativeOsAPI=false -Dstorage.wal.allowDirectIO=false for 3.0.28-30
+MORE_OPTIONS=""
+
+exit_script() {
+  echo "OrientDB: Caught sigterm..."
+  shutdown.sh
+  wait $child
+}
+
+trap exit_script SIGINT SIGTERM
+
+if [ ! -f /openedrserver/orientdb/import_completed ]; then
+    # Reset the configuration 
+    cp /orientdb/config/orientdb-server-config.xml.template /orientdb/config/orientdb-server-config.xml
+    
+    # generate new credentials
+    export ORIENTDB_ROOT_PASSWORD=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;`
+    export ORIENTDB_WRITER_PASSWORD=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;`
+    export ORIENTDB_HOME=/orientdb
+
+    # generate environment config files - writer account for backend scripts
+    echo "ORIENTDB_HOST=orientdb" >> /openedrserver/.env
+    echo "ORIENTDB_PORT=2424" >> /openedrserver/.env
+    echo "ORIENTDB_NAME=DataFusion" >> /openedrserver/.env
+    echo "ORIENTDB_USER=writer" >> /openedrserver/.env
+    echo "ORIENTDB_PASSWORD=$ORIENTDB_WRITER_PASSWORD" >> /openedrserver/.env
+    # Backend container hosting the nodeJS script will also see the same path
+    chmod 600 /openedrserver/.env
+
+    # root account for full database export scripts
+    echo "ORIENTDB_HOST=orientdb" > /openedrserver/backend/exportScripts/.env
+    echo "ORIENTDB_PORT=2424" >> /openedrserver/backend/exportScripts/.env
+    echo "ORIENTDB_NAME=DataFusion" >> /openedrserver/backend/exportScripts/.env
+    echo "ORIENTDB_USER=root" >> /openedrserver/backend/exportScripts/.env
+    echo "ORIENTDB_PASSWORD=$ORIENTDB_ROOT_PASSWORD" >> /openedrserver/backend/exportScripts/.env
+    chmod 600 /openedrserver/backend/exportScripts/.env
+    
+    server.sh $MORE_OPTIONS & 
+    
+    echo ""
+    echo "======================================="
+    echo "Schema import will start in 20 seconds..."
+    echo "======================================="
+    echo ""
+    sleep 20
+
+    echo "Creating database & importing schema..."
+    console.sh "create database remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; import database /openedrserver/backend/exportScripts/schema.gz;"
+
+    echo "Importing server-side functions..."
+    console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; import database /openedrserver/backend/exportScripts/functions.json -merge=true -migrateLinks=false -rebuildIndexes=false;"
+
+    echo "Importing Lineage Sequence"
+    console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; import database /openedrserver/backend/exportScripts/processSequence.json -merge=true -migrateLinks=false -rebuildIndexes=false;"
+    
+    echo "Importing CommandLineClusters"
+    console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; import database /openedrserver/backend/exportScripts/commandLineClusters.json -merge=true -migrateLinks=false -rebuildIndexes=false;"
+
+    echo "Adding root & writer accounts..."
+    console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; update ouser set password='$ORIENTDB_WRITER_PASSWORD' where name = 'writer';"
+    sleep 20 && touch /openedrserver/orientdb/import_completed # need to delay the trigger since ODB takes time to start
+
+    shutdown.sh # NEED to shutdown gracefully otherwise corruption & unable to start
+    
+    echo ""
+    echo "======================================="
+    echo "root password: "$ORIENTDB_ROOT_PASSWORD
+    echo "======================================="
+    echo ""
+fi
+# see https://github.com/orientechnologies/orientdb/issues/9278
+server.sh $MORE_OPTIONS -Dlog.console.level=WARNING &
+child=$!
+wait $child
