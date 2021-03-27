@@ -35,9 +35,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     command -v docker >/dev/null 2>&1 || { echo >&2 "Please install docker.  Aborting..."; exit 1; }
     command -v brew >/dev/null 2>&1 || { echo >&2 "Please install brew.  Aborting..."; exit 1; }
     IPADDR=$(ipconfig getifaddr en0)
-    echo "Using $IPADDR"    
-    echo "install all the necessary dependencies for macOS..."
-    brew list bindfs || brew install bindfs
+    echo "Using $IPADDR as SFTP destination"    
     # otherwise orientdb 3.0.3X & 3.1.X onwards will fail to start
     # see https://github.com/orientechnologies/orientdb/issues/9278
     cat $PWD/orientdb/entrypoint.macOS > $PWD/orientdb/entrypoint
