@@ -27,6 +27,11 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sudo apt-get install -y docker-ce docker-compose
         echo "starting docker service..."
         sudo /etc/init.d/docker start
+    else # Ubuntu WSL(2) but still need to check for docker existence
+        if [[ ! "$(whereis docker)" == *bin* ]]; then
+             echo "Please install docker!"
+             exit 1
+        fi
     fi
     sudo chown 1001:0 ./backend/sftp/uploads
     sudo chmod g+s ./backend/sftp/uploads
