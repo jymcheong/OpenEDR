@@ -18,15 +18,16 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "installing dependencies..."
     sudo apt-get update  
     sudo apt install git zip curl tmux moreutils net-tools python acl -y 
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable edge"
-    sudo apt-get update
-    sudo apt-cache policy docker-ce
-    sudo apt-get install -y docker-ce docker-compose
-    # add current user to docker group so as to avoid sudo docker-compose but doesn't seem to work
-    # sudo usermod -aG docker $USER         
-    echo "starting docker service..."
-    sudo /etc/init.d/docker start
+    # Check if within Ubuntu WSL(2), skip docker installation if so...
+    if [[ ! "$(</proc/sys/kernel/osrelease)" == *microsoft* ]]; then
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable edge"
+        sudo apt-get update
+        sudo apt-cache policy docker-ce
+        sudo apt-get install -y docker-ce docker-compose
+        echo "starting docker service..."
+        sudo /etc/init.d/docker start
+    fi
     sudo chown 1001:0 ./backend/sftp/uploads
     sudo chmod g+s ./backend/sftp/uploads
     sudo setfacl -m d:u::-w- ./backend/sftp/uploads
@@ -35,10 +36,10 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     command -v docker >/dev/null 2>&1 || { echo >&2 "Please install docker.  Aborting..."; exit 1; }
     command -v brew >/dev/null 2>&1 || { echo >&2 "Please install brew.  Aborting..."; exit 1; }
     IPADDR=$(ipconfig getifaddr en0)
-    echo "Using $IPADDR"    
+    echo "Using $IPADDR as SFTP destination"    
     # otherwise orientdb 3.0.3X & 3.1.X onwards will fail to start
     # see https://github.com/orientechnologies/orientdb/issues/9278
-    sed -i 's/MORE_OPTIONS=""/MORE_OPTIONS="-Dstorage.disk.useNativeOsAPI=false"/g' orientdb/entrypoint
+    cat $PWD/orientdb/entrypoint.macOS > $PWD/orientdb/entrypoint
 fi
 
 echo "UID=$UID" > .env
