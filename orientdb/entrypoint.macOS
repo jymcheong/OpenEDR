@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # macOS needs -Dstorage.disk.useNativeOsAPI=false -Dstorage.wal.allowDirectIO=false for 3.0.28-30
-MORE_OPTIONS=""
+MORE_OPTIONS="-Dstorage.disk.useNativeOsAPI=false -Dstorage.wal.allowDirectIO=false"
 
 exit_script() {
   echo "OrientDB: Caught sigterm..."

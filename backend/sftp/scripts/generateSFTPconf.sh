@@ -18,7 +18,7 @@ echo "$keyfile"
 
 ## Extract IP addresses
 payload=""
-file="/etc/sftp.d/IPaddresses"
+file="/etc/IPaddresses"
 while read -r line
 do                     # need to match docker-compose.yml port-mapping (host side, it's listening to 2222 within container)
   payload='{"address":"'$line'","port":"2222","user":"'$sftpuser'","keyName":"'$keyfile'"},'$payload

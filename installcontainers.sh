@@ -27,6 +27,11 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sudo apt-get install -y docker-ce docker-compose
         echo "starting docker service..."
         sudo /etc/init.d/docker start
+    else # Ubuntu WSL(2) but still need to check for docker existence
+        if [[ ! "$(whereis docker)" == *bin* ]]; then
+             echo "Please install docker!"
+             exit 1
+        fi
     fi
     sudo chown 1001:0 ./backend/sftp/uploads
     sudo chmod g+s ./backend/sftp/uploads
@@ -50,7 +55,7 @@ echo "SFTP_HOST=$IPADDR" >> .env
 
 # sftp/scripts/generateSFTPconf.sh will read this file
 # to generate sftpconf.zip, which is needed at client-side
-echo $IPADDR > ./backend/sftp/scripts/IPaddresses
+echo $IPADDR > ./backend/sftp/IPaddresses
 
 # sftp container will shift uploaded files & signal folders into here
 echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
