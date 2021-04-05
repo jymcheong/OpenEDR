@@ -10,6 +10,8 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     sudo fuser /var/lib/dpkg/lock
     if [ $? -eq 0 ]; then
         echo "Unattended upgrade may be running, we cannot proceed..."
+        cd ..
+        rm -rf openEDR
         exit
     fi
     # Get the first IP address
