@@ -110,6 +110,7 @@ services:
       # corresponds to .env C2_PATH=/openedrserver/backend/sftp/response/
       - './backend/sftp/response:/home/uploader/response:ro'
       - './backend/sftp/scripts:/etc/sftp.d'
+      - './backend/sftp/IPaddresses:/etc/IPaddresses'
     ports:
       - "${SFTP_HOST}:2222:2222"
     depends_on:
