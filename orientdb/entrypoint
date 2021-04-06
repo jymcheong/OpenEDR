@@ -45,7 +45,12 @@ if [ ! -f /openedrserver/orientdb/import_completed ]; then
     echo "Schema import will start in 20 seconds..."
     echo "======================================="
     echo ""
-    sleep 20
+    # sleep 20
+    echo "Wait for OrientDB..."
+    while ! echo "" 2>/dev/null > /dev/tcp/orientdb/2424 ; do
+      echo "Waiting for 5 secs..."
+      sleep 5
+    done
 
     echo "Creating database & importing schema..."
     console.sh "create database remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; import database /openedrserver/backend/exportScripts/schema.gz;"
