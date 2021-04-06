@@ -10,8 +10,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     sudo fuser /var/lib/dpkg/lock
     if [ $? -eq 0 ]; then
         echo "Unattended upgrade may be running, we cannot proceed..."
-        cd ..
-        rm -rf openEDR
         exit
     fi
     # Get the first IP address
@@ -39,6 +37,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     sudo chmod g+s ./backend/sftp/uploads
     sudo setfacl -m d:u::-w- ./backend/sftp/uploads
 elif [[ "$OSTYPE" == "darwin"* ]]; then
+    touch ./.macOS # so that ./orientdb/entrypoint can use the correct start ODB options
     # Better to get user to install, don't want to be liable for anything here
     command -v docker >/dev/null 2>&1 || { echo >&2 "Please install docker.  Aborting..."; exit 1; }
     command -v brew >/dev/null 2>&1 || { echo >&2 "Please install brew.  Aborting..."; exit 1; }

@@ -1,7 +1,12 @@
 #!/bin/bash
 
 # macOS needs -Dstorage.disk.useNativeOsAPI=false -Dstorage.wal.allowDirectIO=false for 3.0.28-30
-MORE_OPTIONS=""
+if [ -f /openedrserver/.macOS ]; then
+  echo "using macOS start up options..."
+  MORE_OPTIONS="-Dstorage.disk.useNativeOsAPI=false -Dstorage.wal.allowDirectIO=false"
+else
+  MORE_OPTIONS=""
+fi
 
 exit_script() {
   echo "OrientDB: Caught sigterm..."
