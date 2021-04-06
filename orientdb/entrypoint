@@ -62,8 +62,6 @@ if [ ! -f /openedrserver/orientdb/import_completed ]; then
     echo "Adding root & writer accounts..."
     console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; update ouser set password='$ORIENTDB_WRITER_PASSWORD' where name = 'writer';"
     touch /openedrserver/orientdb/import_completed # need to delay the trigger since ODB takes time to start
-
-    shutdown.sh # NEED to shutdown gracefully otherwise corruption & unable to start
     
     echo ""
     echo "======================================="
