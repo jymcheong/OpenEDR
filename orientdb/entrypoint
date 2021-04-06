@@ -37,7 +37,8 @@ if [ ! -f /openedrserver/orientdb/import_completed ]; then
     echo "ORIENTDB_PASSWORD=$ORIENTDB_ROOT_PASSWORD" >> /openedrserver/backend/exportScripts/.env
     chmod 600 /openedrserver/backend/exportScripts/.env
     
-    server.sh $MORE_OPTIONS & 
+    server.sh $MORE_OPTIONS -Dlog.console.level=WARNING &
+    child=$!
     
     echo ""
     echo "======================================="
@@ -60,7 +61,7 @@ if [ ! -f /openedrserver/orientdb/import_completed ]; then
 
     echo "Adding root & writer accounts..."
     console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; update ouser set password='$ORIENTDB_WRITER_PASSWORD' where name = 'writer';"
-    sleep 40 && touch /openedrserver/orientdb/import_completed # need to delay the trigger since ODB takes time to start
+    touch /openedrserver/orientdb/import_completed # need to delay the trigger since ODB takes time to start
 
     shutdown.sh # NEED to shutdown gracefully otherwise corruption & unable to start
     
@@ -69,8 +70,11 @@ if [ ! -f /openedrserver/orientdb/import_completed ]; then
     echo "root password: "$ORIENTDB_ROOT_PASSWORD
     echo "======================================="
     echo ""
+    
+    wait $child
+else
+    # see https://github.com/orientechnologies/orientdb/issues/9278
+    server.sh $MORE_OPTIONS -Dlog.console.level=WARNING &
+    child=$!
+    wait $child
 fi
-# see https://github.com/orientechnologies/orientdb/issues/9278
-server.sh $MORE_OPTIONS -Dlog.console.level=WARNING &
-child=$!
-wait $child
