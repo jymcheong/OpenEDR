@@ -4,6 +4,11 @@ const _threshold = 0.80
 const _stage2Score = 20
 const _stage3Score = 40
 
+const _severityLevel1 = 1
+const _severityLevel2 = 2
+const _severityLevel3 = 3
+const _severityLevel4 = 4
+
 var _session = null;
 var _orgStatus = {} // to check if profiling/detection phase
 
@@ -35,7 +40,7 @@ async function eventHandler(newEvent) {
     newEvent = newEvent['data']; 
     
     var rid = newEvent['@class'] == 'CommandLineSighted' || newEvent['@class'] == 'LateralCommunication' 
-            || newEvent['@class'] == 'DllSighted' ? newEvent['out'] : newEvent['in'];
+            || newEvent['@class'] == 'DllSighted' || newEvent['@class'] == 'Tampered' ? newEvent['out'] : newEvent['in'];
 
     let event = await _session.query('SELECT FROM ' + rid).all()
     //.on('data', async (event)=>{ //handling various child classes of SightedTracking
@@ -77,10 +82,14 @@ async function eventHandler(newEvent) {
             case 'LateralCommunication':
                 handleLateralComm(event);
                 break;
+
+            case 'Tampered':
+                updateCase(_stage2Score,event['Organisation'],event['Hostname'],event['@rid'], 'Process Tampering', _severityLevel2)
+                break;
                 
             case 'Rebooted':
                 console.log('Linking reboot event to case...')
-                updateCase(0,event['Hostname'],event['@rid'], 'Rebooted', 1)
+                updateCase(0,event['Organisation'],event['Hostname'],event['@rid'], 'Rebooted', _severityLevel1)
                 return; // otherwise it will be taken as Privileged Execution
 
             default:
@@ -205,14 +214,14 @@ function handleSYS(newEvent) { // currently hardcoded to trust only Microsoft Wi
     console.log('SignatureStatus:' + newEvent['SignatureStatus']);
     score = newEvent['SignatureStatus'] == 'Valid' ? score : score + _stage2Score;
     score = newEvent['Signature'] == 'Microsoft Windows' || newEvent['Signature'] == 'Microsoft Corporation' ? score : score + _stage2Score;
-    updateCase(score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'], "Foreign SYS Driver", 3)
+    updateCase(score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'], "Foreign SYS Driver", _severityLevel3)
 }
 
 async function handleDLL(newEvent) { // currently hardcoded to trust only Microsoft Windows signature
     return new Promise( async(resolve, reject) => {
         var score = 0;
         if(newEvent['@class']=='ProcessCreate'){
-            updateCase(_stage2Score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'] , "Loaded Foreign DLL", 2)
+            updateCase(_stage2Score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'] , "Loaded Foreign DLL", _severityLevel2)
             resolve(newEvent)
         }
 
@@ -221,7 +230,7 @@ async function handleDLL(newEvent) { // currently hardcoded to trust only Micros
             score = "${newEvent['Signature']}".indexOf('Microsoft') == 0 ? score : score + _stage2Score; 
             if(score > 0) {  //delaying to avoid duplicated LoadedImage
                 setTimeout(async function(){ 
-                    updateCase(score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'] , "Foreign DLL", 2) 
+                    updateCase(score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'] , "Foreign DLL", _severityLevel2) 
                     event = await _session.query("select expand(in('LoadedImage')) from " + newEvent['@rid']).all()
                     console.log('handleDLL expanding in(LoadedImage)' + event.length)
                     if(event.length == 0) return undefined
@@ -246,7 +255,7 @@ function handleEXE(newEvent) {
     //--- end exclusions -----
         
     if(score > 0) {
-        updateCase(score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'], 'Foreign EXE', 2)
+        updateCase(score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'], 'Foreign EXE', _severityLevel2)
     }
 }
 
@@ -258,11 +267,11 @@ async function handleCommandLine(hupc, inRid) {
         _session.command('update ' + hupc['@rid'] + ' set Score = ' + score)
         if(score == _stage2Score) {
             console.log('Found new CommandLine cluster!')
-            updateCase(score,hupc['Organisation'],hupc['Hostname'],inRid, 'Unusual CommandLine', 2)
+            updateCase(score,hupc['Organisation'],hupc['Hostname'],inRid, 'Unusual CommandLine', _severityLevel2)
         }
         else {
             console.log('Using score from existing CommandLine cluster!')
-            updateCase(score,hupc['Organisation'],hupc['Hostname'],inRid, 'Known Malicious CommandLine', 2)
+            updateCase(score,hupc['Organisation'],hupc['Hostname'],inRid, 'Known Malicious CommandLine', _severityLevel2)
         }
         event = await _session.query("select from " + inRid).all() //return processcreate
         if(event.length > 0) return new Promise( async(resolve, reject) => { resolve(event[0]) })
@@ -274,7 +283,7 @@ async function handleCommandLine(hupc, inRid) {
 function handleSequence(newEvent) {
     var score = _stage2Score;
     console.log('New sequence seen with:' + newEvent['Image'])
-    updateCase(score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'], 'Unusual Process Sequence', 2)
+    updateCase(score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'], 'Unusual Process Sequence', _severityLevel2)
 }
 
 function handleLateralComm(newEvent) { //newEvent is NetworkConnect
@@ -298,7 +307,7 @@ function handleLateralComm(newEvent) { //newEvent is NetworkConnect
         //--- end exclusions -----
         
         console.log('\nFound lateral communication...\n')
-        updateCase(_stage3Score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'], 'Lateral Communication', 3)
+        updateCase(_stage3Score,newEvent['Organisation'],newEvent['Hostname'],newEvent['@rid'], 'Lateral Communication', _severityLevel3)
     }
 }
 
@@ -310,7 +319,7 @@ function checkBeforeExplorer(processCreate){
             if(event.length > 0) {
                 console.log('checking before explorer type... ' + event[0]['ProcessType'])
                 var score = event[0]['ProcessType'] == 'BeforeExplorer' ? _stage3Score : 0;
-                if(score > 0) updateCase(score,event[0]['Organisation'],event[0]['Hostname'],event[0]['@rid'], 'Executed Before Explorer', 2)            
+                if(score > 0) updateCase(score,event[0]['Organisation'],event[0]['Hostname'],event[0]['@rid'], 'Executed Before Explorer', _severityLevel2)
             }
         })    
     }
@@ -322,7 +331,7 @@ function checkPrivilege(processCreate){
     score = processCreate['IntegrityLevel'] == 'High' ? score + _stage3Score : score;
     score = processCreate['IntegrityLevel'] == 'System' ? score + _stage3Score : score;
     console.log('IntegrityLevel: ' + processCreate['IntegrityLevel'])
-    if(score > 0) updateCase(score,processCreate['Organisation'],processCreate['Hostname'],processCreate['@rid'], 'Privileged Execution', 3)
+    if(score > 0) updateCase(score,processCreate['Organisation'],processCreate['Hostname'],processCreate['@rid'], 'Privileged Execution', _severityLevel3)
 }
 
 function checkNetworkEvents(processCreate) {
@@ -333,7 +342,7 @@ function checkNetworkEvents(processCreate) {
         .then((event)=>{
             if(event.length > 0) {
                 console.log('Found Outbound Network Communications')
-                updateCase(_stage2Score,processCreate['Organisation'],processCreate['Hostname'],processCreate['@rid'], 'Outbound Network Communications', 2)
+                updateCase(_stage2Score,processCreate['Organisation'],processCreate['Hostname'],processCreate['@rid'], 'Outbound Network Communications', _severityLevel2)
             }
         })    
     }
@@ -348,7 +357,7 @@ function checkSpoofedProcess(processCreate) {
             if(event.length > 0) {
                 if('out_AddedTo' in event[0]) { // added to case for OTHER reasons
                     console.log('Found Spoofed Parent ProcessId')
-                    updateCase(_stage2Score,processCreate['Organisation'],processCreate['Hostname'],processCreate['@rid'], 'Spoofed Parent ProcessId', 2)
+                    updateCase(_stage2Score,processCreate['Organisation'],processCreate['Hostname'],processCreate['@rid'], 'Spoofed Parent ProcessId', _severityLevel2)
                 }
             }
         })    

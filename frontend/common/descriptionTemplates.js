@@ -1,5 +1,12 @@
 const event = {}
 
+event['ProcessTampering'] = `
+
+### <font color="#AAAAAA" size=2>Image</font>
+{{event.Image}}
+
+`
+
 //SYSMON EVENT ID 1 
 event['ProcessCreate'] = `
 ### <font color="#AAAAAA" size=2>{{event.ProcessType}} Image - Pid {{event.ProcessId}} - {{event.IntegrityLevel}} IntegrityLevel</font>

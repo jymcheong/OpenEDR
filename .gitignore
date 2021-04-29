@@ -16,8 +16,7 @@ orientdb/config/orientdb-server-config.xml
 manage/mountUploads.sh
 backend/sftp/uploads/*
 backend/import/LOLdata/*
-.DS_Store
-backend/.DS_Store
 frontend/.DS_Store
 frontend/wekanMods/dump/admin/system.version.bson
 frontend/wekanMods/dump/admin/system.version.metadata.json
+.DS_Store

@@ -10,6 +10,12 @@ User: {{event.User}}</font>
 {{event.Image}}
 `
 
+titles['ProcessTampering'] = 
+`{{event.SysmonClass}} <font color="#AAAAAA" size=2>@ {{event.UtcTimeFormatted}}</font>
+
+{{event.Type}}
+`
+
 titles['FileCreateTime'] = 
 `{{event.SysmonClass}} <font color="#AAAAAA" size=2>@ {{event.UtcTimeFormatted}}</font>
 
