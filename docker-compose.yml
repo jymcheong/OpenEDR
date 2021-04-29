@@ -1,14 +1,12 @@
 version: '2'
 services:
   orientdb:
-    # image: 'jymcheong/openedr:orientdb' # based on 3.0.28
-    # image: 'orientdb:3.0.33' # note 3.1.X won't work on macOS docker but works in linux
-    image: 'orientdb:3.0.34' # note 3.1.X won't work on macOS docker but works in linux
-    
+    # determined in installcontainers.sh
+    image: ${ODB_IMAGE}         
     command: /entrypoint # this is to override for official images
     container_name: orientdb
     # means map current user to container's root
-    user: ${UID}:0
+    user: ${USERID}:0
     restart: always
     volumes:
       - './orientdb/databases:/orientdb/databases'
@@ -29,7 +27,7 @@ services:
   openedr:
     image: keymetrics/pm2:14-slim
     container_name: openedr-app
-    user: ${UID}:0
+    user: ${USERID}:0
     restart: always
     entrypoint: /openedrserver/entrypoint
     volumes: 
@@ -43,7 +41,7 @@ services:
   wekandb:
     image: mongo:4.2.7
     container_name: wekan-db
-    user: ${UID}:0
+    user: ${USERID}:0
     restart: always
     entrypoint: /entrypoint
     networks:
@@ -63,7 +61,7 @@ services:
     image: jymcheong/openedr:frontend
     #-------------------------------------------------------------------------------------
     container_name: wekan-app
-    user: ${UID}:0
+    user: ${USERID}:0
     restart: always
     #volumes: 
     #  - ./entrypoint:/entrypoint
@@ -91,11 +89,11 @@ services:
       - wekandb
   
   onewaysftp:
-    image: 'jymcheong/openedr:sftp'
+    image: jymcheong/openedr:sftp
     container_name: onewaysftp
     
     # tried very hard to use non-root, somehow not working
-    #user: ${UID}:0
+    #user: ${USERID}:0
 
     # Disable this since bindfs need to start before this container
     # see manage/mountUploads.sh script
@@ -112,9 +110,21 @@ services:
       - './backend/sftp/scripts:/etc/sftp.d'
       - './backend/sftp/IPaddresses:/etc/IPaddresses'
     ports:
-      - "${SFTP_HOST}:2222:2222"
+      - "${SFTP_HOST}:${SFTP_PORT}:2222"
     depends_on:
         - wekan
+    
+  caddy:
+    image: caddy
+    container_name: clientconfighosting
+    user: ${USERID}
+    restart: always
+    ports:
+      - "${SFTP_HOST}:${SFTPCONF_PORT}:80"
+    volumes:
+      - ./clientconf:/usr/share/caddy
+    depends_on:
+      - onewaysftp
 
 volumes:
   wekan-db:

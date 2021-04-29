@@ -143,6 +143,11 @@ function handleDetectOnly(action, event) {
     g_ODBsession.command('INSERT INTO ResponseRequest CONTENT ' + JSON.stringify(r))
 }
 
+function whitelistProcess(odb,rid) {
+    whitelistCommandLine(odb,rid);
+    whitelistSequence(odb,rid);
+}
+
 function whitelistCommandLine(odb,rid) {
     odb.query('select WhitelistCommandLine("' + rid + '")')
 }
@@ -184,6 +189,9 @@ async function handleInvestigationBoardCustomFieldChange(hookEvent, odb){
     switch(option){
         case 'Kill Process':
             killProcess(event[0]);
+            break;
+        case 'Whitelist Process':
+            whitelistProcess(odb,event[0]['@rid']);
             break;
         case 'Whitelist CommandLine':
             whitelistCommandLine(odb,event[0]['@rid']);
