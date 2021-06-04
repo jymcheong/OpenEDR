@@ -56,10 +56,7 @@ esac
 
 # caters to Arm64 Linux/macOS
 case "$(arch)" in
-  aarch64)
-    ODB_IMAGE="jymcheong/openedr:orientdb" 
-    ;;  
-  arm64) # updated to 3.0.34 on 23-Apr-2021 for Arm64
+  aarch64|arm64) # updated to 3.0.34 on 23-Apr-2021 for Arm64
     ODB_IMAGE="jymcheong/openedr:orientdb" 
     ;;
   x86_64)
