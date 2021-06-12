@@ -13,6 +13,8 @@ To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit
 * Windows endpoints needs TCP port 2222 & 8888 to reach backend (Pls check firewall(s) settings)
 
+**[Virtual Internship](https://github.com/jymcheong/Virtual-Internship): Year 1 undegrad's [adventure with OpenEDR](https://www.notion.so/jymcheong/YJ-s-Internship-c9c14b6f5c8e4827b8b0a9f33c499137)** 
+
 ## Installation Steps
 With a sudoer account (but **DO NOT preceed command with `sudo`**), install the backend with: 
 
