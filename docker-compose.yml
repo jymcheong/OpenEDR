@@ -117,7 +117,8 @@ services:
   caddy:
     image: caddy
     container_name: clientconfighosting
-    user: ${USERID}
+    # Ubuntu-20-Arm64 refuses to bind 80
+    #user: ${USERID}:0
     restart: always
     ports:
       - "${SFTP_HOST}:${SFTPCONF_PORT}:80"
