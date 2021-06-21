@@ -16,6 +16,8 @@ To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
 **[Virtual Internship](https://github.com/jymcheong/Virtual-Internship): Year 1 undegrad's [adventure with OpenEDR](https://www.notion.so/jymcheong/YJ-s-Internship-c9c14b6f5c8e4827b8b0a9f33c499137)** 
 
 ## Installation Steps
+For a SMOOTH INSTALLATION, PLS ENSURE YOU INSTALLED DOCKER SERVICE FIRST. Thanks :)
+
 With a sudoer account (but **DO NOT preceed command with `sudo`**), install the backend with: 
 
 `curl -L https://raw.githubusercontent.com/jymcheong/OpenEDR/master/install.sh |bash`
