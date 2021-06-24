@@ -83,13 +83,6 @@ async function eventHandler(newEvent) {
                 handleLateralComm(event);
                 break;
 
-	    case 'SftpIntrusionSighted':
-	        // Debug purposes
-	    	console.log('Linking SFTP Intruson event...')
-	        // Update case + score
-	        updateCase(_stage3Score,event['Organisation'],event['Hostname'],event['@rid'], 'SFTP Intrusion', _severityLevel3)
-	        break;
-
             case 'Tampered':
                 updateCase(_stage2Score,event['Organisation'],event['Hostname'],event['@rid'], 'Process Tampering', _severityLevel2)
                 break;
