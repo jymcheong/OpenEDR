@@ -20,3 +20,7 @@ frontend/.DS_Store
 frontend/wekanMods/dump/admin/system.version.bson
 frontend/wekanMods/dump/admin/system.version.metadata.json
 .DS_Store
+.macOS
+backend/sftp/IPaddresses
+clientconf/index.html
+clientconf/sftpconf.zip
