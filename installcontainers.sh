@@ -1,34 +1,15 @@
 #!/bin/bash
 
-# AVOID the same network zone/range as the SFTP receiver service
-# for Wekan & OrientDB web-UI
+## This script creates a .env which is used by docker-compose later
+
+# AVOID the same network zone/range as the SFTP receiver service for Wekan & OrientDB web-UI
 FRONTEND_IP=127.0.0.1 
 # for Wekan web-UI only
 FRONTEND_PORT=8080
+# Endpoint will get the SFTP configuration package
 SFTPCONF_PORT=8888
+# Endpoints uploads to this port
 SFTP_PORT=2222
-
-if ! command -v curl &> /dev/null
-then
-    echo "curl missing... pls install in order to proceed further"
-    exit
-fi
-
-if ! command -v docker &> /dev/null
-then
-    echo "docker is missing... using https://get.docker.com/ to install..."
-    curl -fsSL https://get.docker.com | sh
-    sudo systemctl start docker
-    sudo systemctl enable docker
-fi
-
-# dealing with CentOS 
-if ! command -v docker-compose &> /dev/null
-then
-    echo "docker-compose is missing... using https://get.docker.com/ to install..."
-    sudo curl -L https://github.com/docker/compose/releases/download/1.29.1/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose
-    sudo chmod +x /usr/bin/docker-compose
-fi
 
 case $OSTYPE in
   "linux-gnu"*) # updated to 3.0.34 on 23-Apr-2021 for Arm64
@@ -42,7 +23,10 @@ case $OSTYPE in
     
     # this only works in linux with ACL enabled
     # -m (modify) d (default) u (user) -w- (write-only)
-    sudo setfacl -m d:u::-w- ./backend/sftp/uploads
+    if command -v setfacl &> /dev/null
+    then
+      sudo setfacl -m d:u::-w- ./backend/sftp/uploads
+    fi
     ;;
   "darwin"*)
     echo "detected macOS..."
