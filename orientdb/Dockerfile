@@ -1,16 +1,12 @@
-############################################################
-# Dockerfile to run an OrientDB (Graph) Container
-############################################################
-
-FROM openjdk:8-jdk-slim
+FROM arm64v8/openjdk:11-jdk-slim
 
 # Override the orientdb download location with e.g.:
 #   docker build -t mine --build-arg ORIENTDB_DOWNLOAD_SERVER=https://repo1.maven.org/maven2/com/orientechnologies/ .
 ARG ORIENTDB_DOWNLOAD_SERVER
 
-ENV ORIENTDB_VERSION 3.0.28
-ENV ORIENTDB_DOWNLOAD_MD5 931e22bb22e10af99f18144cbee04551
-ENV ORIENTDB_DOWNLOAD_SHA1 fc9f93773576fbf7493dbe8f8c6b784d0165d028
+ENV ORIENTDB_VERSION 3.0.34
+ENV ORIENTDB_DOWNLOAD_MD5 f6d1d9b0a60ec8dae3736cf0421c8063
+ENV ORIENTDB_DOWNLOAD_SHA1 eb3aee62d7a216d321ff2f6f67f66521309a157e
 
 ENV ORIENTDB_DOWNLOAD_URL ${ORIENTDB_DOWNLOAD_SERVER:-https://repo1.maven.org/maven2/com/orientechnologies}/orientdb-community/$ORIENTDB_VERSION/orientdb-community-$ORIENTDB_VERSION.tar.gz
 
@@ -27,11 +23,10 @@ RUN mkdir /orientdb && \
   && rm orientdb-community-$ORIENTDB_VERSION.tar.gz \
   && rm -rf /orientdb/databases/*
 
+
 ENV PATH /orientdb/bin:$PATH
 
 VOLUME ["/orientdb/backup", "/orientdb/databases", "/orientdb/config"]
-
-RUN chmod -R g+w /orientdb && cd /orientdb && umask 002
 
 WORKDIR /orientdb
 
@@ -41,6 +36,5 @@ EXPOSE 2424
 #OrientDb http
 EXPOSE 2480
 
-# OpenEDR custom entrypoint
-COPY entrypoint /
-ENTRYPOINT ["/entrypoint"]
+# Default command start the server
+CMD ["server.sh"]

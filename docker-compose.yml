@@ -2,7 +2,7 @@ version: '2'
 services:
   orientdb:
     # determined in installcontainers.sh
-    image: ${ODB_IMAGE}         
+    image: ${ODB_IMAGE}
     command: /entrypoint # this is to override for official images
     container_name: orientdb
     # means map current user to container's root
@@ -103,7 +103,9 @@ services:
     volumes:
       - './backend/sftp/log:/var/log'
       - './backend/sftp/keys:/etc/ssh/keys'
+      # events are uploaded to this directory monitored by incrontabd
       - './backend/sftp/uploads:/home/uploader/uploads'
+      # ./backend/sftp/dockerbuild/files/incron.sh will move contents here
       - './backend/sftp/tobeinserted:/home/tobeinserted'
       # corresponds to .env C2_PATH=/openedrserver/backend/sftp/response/
       - './backend/sftp/response:/home/uploader/response:ro'
@@ -117,7 +119,8 @@ services:
   caddy:
     image: caddy
     container_name: clientconfighosting
-    user: ${USERID}
+    # Ubuntu-20-Arm64 refuses to bind 80
+    #user: ${USERID}:0
     restart: always
     ports:
       - "${SFTP_HOST}:${SFTPCONF_PORT}:80"
