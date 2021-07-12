@@ -14,3 +14,5 @@ sudo docker exec -it openedr-app /bin/bash -c "cd /openedrserver/backend/exportS
 # export functions ONLY since OUSER & OROLE cannot be merged nor do you want it to overwrite. upgrade.sql uses this.
 # output file: functionsONLY.json
 sudo docker exec -it openedr-app /bin/bash -c "cd /openedrserver/backend/exportScripts/ && node exportFunctions.js"
+
+sudo docker exec -it openedr-app /bin/bash -c "cd /openedrserver/backend/exportScripts/ && node writeODBfunctions2files.js"

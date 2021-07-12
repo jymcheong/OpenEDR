@@ -6,11 +6,11 @@
  */
 
 const fs = require("fs")
-const connectODB = require('../../common/orientdb').connectODB;
+const odb = new (require('../../common/odb').Odb)();
 
 // official EXPORT DATABASE for functions IS VERY SLOW!
 async function exportFunctions(){
-    _session = await connectODB()
+    _session = await odb.startSession()
     var output = '{"records":[';
     let results = await _session.query("select @this.toJSON() from OFunction").all();
     for(var i = 0; i < results.length; i++) {
