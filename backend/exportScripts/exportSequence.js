@@ -6,11 +6,10 @@
  */
 
 const fs = require("fs")
-//eval(fs.readFileSync(__dirname +  '/../common.js')+'')
-const connectODB = require('../../common/orientdb').connectODB;
+const odb = new (require('../../common/odb').Odb)();
 
 async function exportFunctions(){
-    _session = await connectODB()
+    _session = await odb.startSession()
     var output = '{"records":[';
     let results = await _session.query("select @this.toJSON() from seq where BaseLined = true").all();
     for(var i = 0; i < results.length; i++) {
