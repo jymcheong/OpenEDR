@@ -80,10 +80,6 @@ prompt_address_selection "Select SFTP address (set to $DEFAULT_ADDRESS after $TI
 SFTP_IP=$return_value
 echo "Selected $SFTP_IP for SFTP event-collection access."
 
-# in an event attacker gets a valid SFTP, these mitigate attacks
-sudo chown 1001:0 ./backend/sftp/uploads
-sudo chmod g+s ./backend/sftp/uploads
-
 # this only works in linux with ACL enabled
 # -m (modify) d (default) u (user) -w- (write-only)
 if command -v setfacl &> /dev/null
