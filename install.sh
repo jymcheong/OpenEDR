@@ -124,7 +124,7 @@ echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
 
 # sftp/scripts/generateSFTPconf.sh will read this file
 # to generate sftpconf.zip, which is needed at client-side
-echo $IPADDR > ./backend/sftp/IPaddresses
+echo $SFTP_IP > ./backend/sftp/IPaddresses
 
 touch orientdb/orient.pid
 # docker-compose will take care of the rest of the services
