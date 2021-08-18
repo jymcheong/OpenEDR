@@ -25,7 +25,7 @@ services:
       - '${FRONTEND_IP}:2480:2480'
 
   openedr:
-    image: keymetrics/pm2:14-slim
+    image: keymetrics/pm2:16-slim
     container_name: openedr-app
     user: ${USERID}:0
     restart: always
