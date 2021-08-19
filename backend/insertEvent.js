@@ -46,7 +46,6 @@ async function startWork(){
             }
         })
         checkSession()
-        startCleanUp() //clean up TriggerProcessing table
     }
     else console.error('Fail to connect to OrientDB!')
 }
@@ -141,19 +140,4 @@ async function checkSession(){
             session = null
         }
     },3000);
-}
-
-async function startCleanUp(){
-    if(session == null) return;
-    setInterval(async function(){
-        try {   
-            if(session != null) {
-                session.command('delete from tp where (sysdate().asLong() - TimeStamp.asLong())/1000 > 90');                    
-            }            
-        }
-        catch(err) {
-            console.error(err)
-            
-        }
-    },30000);
 }
