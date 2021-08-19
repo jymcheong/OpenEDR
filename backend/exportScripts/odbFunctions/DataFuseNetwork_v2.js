@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-null
-
 //parameters
 e
 
@@ -40,7 +31,7 @@ if(e['EventID']==3 || e['EventID']==4) {
 }
   
 if(e['EventID']==1 || e['EventID']==2) {
-	print('network address for ' + e['Hostname'] + ' ' + e['IpAddress'])
+//	print('network address for ' + e['Hostname'] + ' ' + e['IpAddress'])
     db.command('UPDATE NetworkAddress set Count = Count + 1 \
                    UPSERT RETURN AFTER @rid, Count WHERE Hostname = ? AND \
 				   Organisation = ? AND PhysicalAddress = ? AND IpAddress = ?',

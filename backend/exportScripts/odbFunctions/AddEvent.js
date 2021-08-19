@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-false
-
 //parameters
 jsondata,organisation
 
@@ -110,6 +101,7 @@ case "NetworkConnect":
 case "ProcessTerminate":
 case "DriverLoad":
 case "ProcessTampering":
+case "CapturedFile":
        this[classname](r[0])
        break;
     

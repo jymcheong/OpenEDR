@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-null
-
 //parameters
 null
 
@@ -88,7 +79,7 @@ if(doc.field('in').field('Sequence') === null) {
           upsertSequence(seq, doc.field('in').field('@rid'))    
           break;
         }
-        prevSeq = fixSequence(prevSeq)
+        //prevSeq = fixSequence(prevSeq)
     }
     catch(err){
       if(err.indexOf('UPDATE') >= 0) continue; 
