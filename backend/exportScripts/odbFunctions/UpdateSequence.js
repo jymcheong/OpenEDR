@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-null
-
 //parameters
 null
 
@@ -21,13 +12,14 @@ javascript
 
 //code
 /*
+	NO longer in use, kept for reference
 	This is a Dynamic Hook function. Using console:
     alter class parentof Superclass +OTriggered
     alter class parentof CUSTOM onAfterCreate='UpdateSequence'
     This function is called whenever ParentOf edge is linked between a Parent & Child Process.
     This function will upsert the lineage sequence class (named Sequence) to track new process lineage
 */
-
+return
 var db = orient.getDatabase();
 
 function fixSequence(prevSeq){
@@ -41,10 +33,8 @@ function fixSequence(prevSeq){
       print('GetParentOfSequence found: ' + prevSeq + ' for ' + doc.field('in').field('@rid'))	
       return prevSeq
     }
-    var parentEXE = doc.field('out').field('Image').split("\\")
-	parentEXE = parentEXE[parentEXE.length - 1]
-    var childEXE = doc.field('in').field('Image').split("\\")
-	childEXE = childEXE[childEXE.length - 1]
+    var parentEXE = doc.field('out').field('Image').split('\\').reverse()[0];
+    var childEXE = doc.field('in').field('Image').split('\\').reverse()[0];
     var partialSeq = parentEXE + ' > ' + childEXE
     //print(partialSeq)
     var seq = db.query('SELECT Sequence from seq WHERE Sequence like "%' + partialSeq + '"')
@@ -67,13 +57,12 @@ function upsertSequence(seq, rid){
 		sql = 'CREATE EDGE SequenceSighted FROM '+sc[0].field('@rid')+' TO '+ rid
         retry("db.command('" + sql + "')")
     }
-	print(doc.field('in').field('EventTime') + '\n' +  doc.field('in').field('Organisation') + 
-           ' | ' + doc.field('in').field('Hostname') + ' : ' + seq + '|' + sc[0].field('Count'));
+    //print(doc.field('in').field('EventTime') + '\n' +  doc.field('in').field('Organisation') + ' | ' + doc.field('in').field('Hostname') + ' : ' + seq + '|' + sc[0].field('Count'));
 }
 
 // Sometimes Sequence may not be assigned at Microsoft_Windows_Sysmon pre-processing function
 if(doc.field('in').field('Sequence') === null) {
-  print('no pre-processed Sequence!')
+//  print('no pre-processed Sequence!')
   var exename = doc.field('in').field('Image').split("\\")
   exename = exename[exename.length - 1]
   var prevSeq = '' + doc.field('out').field('Sequence'); 
@@ -88,7 +77,7 @@ if(doc.field('in').field('Sequence') === null) {
           upsertSequence(seq, doc.field('in').field('@rid'))    
           break;
         }
-        prevSeq = fixSequence(prevSeq)
+        //prevSeq = fixSequence(prevSeq)
     }
     catch(err){
       if(err.indexOf('UPDATE') >= 0) continue; 

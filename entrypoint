@@ -1,10 +1,5 @@
 #!/bin/bash
 
-#----------------------------------------------------
-# This is entrypoint script for openedr-app container
-# Pls refer to folder docker-compose.yml
-#----------------------------------------------------
-
 exit_script() {
   echo "P1: Caught sigterm in p1, sending TERM to p2"
   kill -TERM $child

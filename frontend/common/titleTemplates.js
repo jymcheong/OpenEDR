@@ -1,5 +1,9 @@
 const titles = {};
 
+titles['CapturedFile'] = 
+`Captured File <font color="#AAAAAA" size=2>@ {{event.UtcTimeFormatted}}</font> {{if(options.event.IntezerVerdict != undefined)}} | <font color="#AAAAAA" size=2>Verdict</font>: {{event.IntezerVerdict}}{{/if}}
+`
+
 titles['ProcessCreate'] = 
 `{{event.SysmonClass}} <font color="#AAAAAA" size=2>@ {{event.UtcTimeFormatted}} - Pid {{event.ProcessId}} 
 

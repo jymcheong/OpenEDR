@@ -24,7 +24,7 @@ async function startWork(){
         fs.readdir(process.env.UPLOAD_PATH, function(err, items) {
             console.log(items); 
             for (var i=0; i<items.length; i++) {
-                if(items[i].indexOf('rotated')>= 0 && items[i].indexOf('.uploaded')>= 0) {
+                if(items[i].indexOf('rotated')>= 0) {
                     console.log('adding ' + items[i]);
                     fileQueue.push(process.env.UPLOAD_PATH + '/' + items[i].replace('.uploaded',''))
                     if(fs.existsSync(items[i])) { 
@@ -45,14 +45,12 @@ async function startWork(){
                 processFile(fileQueue.shift());
             }
         })
-        checkSession()
+        checkSession()        
     }
     else console.error('Fail to connect to OrientDB!')
 }
 
 startWork();
-
-//processFile('/tmp/events.txt') // test single file
 
 //https://stackoverflow.com/questions/16010915/parsing-huge-logfiles-in-node-js-read-in-line-by-line
 function processFile(filepath) {
@@ -68,8 +66,11 @@ function processFile(filepath) {
         .pipe(es.split())
         .pipe(es.mapSync(async function(line) {            
             s.pause(); // process line next and call s.resume() when rdy
+            if(line.length > 0){
+                line = await preProcess(line)            
+                processLine(line, org) // resume the readstream, possibly from a callback
+            } 
             //DO NOT use await for processLine
-            processLine(line, org) // resume the readstream, possibly from a callback
             s.resume();
         })
         .on('error', function(err){
@@ -102,7 +103,12 @@ function deleteFile(filepath) {
       });
 }
 
-//push most of the logic into server side function
+/**
+ * 
+ * @param {escaped JSON line of Windows Event} eventline 
+ * @param {String for multi-tenancy} organisation 
+ * @returns 
+ */
 async function processLine(eventline, organisation) {
     if(session == null) return
     try {
@@ -123,12 +129,17 @@ async function processLine(eventline, organisation) {
     }
 }
 
+/**
+ * Checks session by calling ODB ConnectParentProcess() 
+ * which connects parent to child processes.
+ * Reconnects when session is dead.
+ */
 async function checkSession(){
     if(session == null) return;
     setInterval(async function(){
         try {   
             if(session != null) {
-                await session.query('SELECT ConnectParentProcess()').all();                    
+                await session.query('SELECT 1').all();                    
             }
             else {
                 session = await odb.startSession();
@@ -140,4 +151,55 @@ async function checkSession(){
             session = null
         }
     },3000);
+}
+
+/**
+ * Pre-process message to extract fields from 4688 & 4689 Message fields.
+ * Note that Nxlog is not extracting the fields & ODB-AddEvent function 
+ * removes Message field due to data-deduplication
+ * 
+ * @param {string} msg JSON event message
+ * @returns JSON event string with extracted fields
+ */
+ async function preProcess(msg) {
+    return new Promise((resolve, reject) => {
+      try{
+        let event = JSON.parse(msg)
+        // Windows audit event 4688 & 4689 are generated ahead of respective Sysmon events
+        if((event.EventID == 4688 || event.EventID == 4689) && event.Channel == 'Security') {      
+          let msg468X = event.Message.split('\r\n')
+          for(var i=3; i< msg468X.length; i++) {            
+            let match468X = msg468X[i].match(/\t(.+)\:\t+(.+)/mi)
+            if(match468X == null) continue;
+            if(match468X.length == 3) {                
+                if (typeof match468X[1].replaceAll !== "undefined") { 
+                // need to de-duplicate, otherwise ODB insert will fail
+                    let key = match468X[1].replaceAll(' ','')
+                    if(key in event) continue
+                    event[key] = match468X[2]
+                }
+            }
+          }
+          
+          if(event.EventID == 4688){
+            let parentPID = event.Message.match(/\s+Creator Process ID\:\s+(.+)\s+/mi)
+            if(parentPID.length > 1) event.PPID = parseInt(parentPID[1])
+            
+            let NewPID = event.Message.match(/\s+New Process ID\:\s+(.+)\s+/mi)
+            if(NewPID.length > 1) event.PID = parseInt(NewPID[1]) 
+          }
+          if(event.EventID == 4689){
+            let PID = event.Message.match(/\s+Process ID\:\s+(.+)\s+/mi)
+            if(PID.length > 1) event.PID = parseInt(PID[1])
+          }
+        }
+        // we added new fields to json object, need to return stringify
+        //console.log(JSON.stringify(event))
+        msg = JSON.stringify(event)
+        resolve(msg)
+      }  
+      catch(error){
+        reject(error)
+      }
+    })
 }

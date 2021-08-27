@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-null
-
 //parameters
 id
 
@@ -34,5 +25,6 @@ if(id in _eventIdLookup){
 	return _eventIdLookup[id]
 }
 else
-    return "Sysmon"
+    return "Sysmon" 
+// when in doubt, throw it to Sysmon class
 

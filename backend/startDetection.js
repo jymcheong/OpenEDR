@@ -40,7 +40,7 @@ async function eventHandler(newEvent) {
     newEvent = newEvent['data']; 
     
     var rid = newEvent['@class'] == 'CommandLineSighted' || newEvent['@class'] == 'LateralCommunication' 
-            || newEvent['@class'] == 'DllSighted' || newEvent['@class'] == 'Tampered' ? newEvent['out'] : newEvent['in'];
+            || newEvent['@class'] == 'DllSighted' || newEvent['@class'] == 'Tampered' || newEvent['@class'] == 'WrittenFileSighted' ? newEvent['out'] : newEvent['in'];
 
     let event = await _session.query('SELECT FROM ' + rid).all()
     //.on('data', async (event)=>{ //handling various child classes of SightedTracking
@@ -83,10 +83,19 @@ async function eventHandler(newEvent) {
                 handleLateralComm(event);
                 break;
 
+            case 'SftpIntrusionSighted':
+                updateCase(_stage3Score,event['Organisation'],event['Hostname'],event['@rid'], 'SFTP Intrusion', _severityLevel3)
+                break;
+
             case 'Tampered':
                 updateCase(_stage2Score,event['Organisation'],event['Hostname'],event['@rid'], 'Process Tampering', _severityLevel2)
                 break;
-                
+            
+            case 'WrittenFileSighted':
+                console.log('CapturedFile sighted')
+                updateCase(0,event['Organisation'],event['Hostname'],event['@rid'], 'Captured File', _severityLevel1)
+                break;
+
             case 'Rebooted':
                 console.log('Linking reboot event to case...')
                 updateCase(0,event['Organisation'],event['Hostname'],event['@rid'], 'Rebooted', _severityLevel1)

@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-null
-
 //parameters
 startrid
 
@@ -20,6 +11,8 @@ GetParentOfSequence
 javascript
 
 //code
+// not in use, kept for reference
+
 var db = orient.getDatabase();
 var circularCheck = {} //each @rid should only be seen ONCE.
 

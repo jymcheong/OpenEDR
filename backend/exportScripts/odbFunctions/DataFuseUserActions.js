@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-null
-
 //parameters
 e
 
@@ -21,18 +12,24 @@ javascript
 
 //code
 // pre-processing routine called by AddEvent
-var db = orient.getDatabase();
-e['_classname'] = 'UserActionTracking'
-delete e['ProcessID']
-try {
-	var uat = JSON.parse(e['Message'])
+try{
+    var db = orient.getDatabase();
+    e['_classname'] = 'UserActionTracking'
+    delete e['ProcessID']
+    try {
+        var uat = JSON.parse(e['Message'])
+    }
+    catch(err) {
+        print(Date() + ' Offending DataFuseUserActions ' + e['Message'])
+        db.command('INSERT INTO FailedJSON SET line = ?', logline)
+        return 0
+    }
+    for(var k in uat){ e[k] = uat[k] }
+    return e
 }
-catch(err) {
-	print(Date() + ' Offending DataFuseUserActions ' + e['Message'])
-    //print(logline)
-    db.command('INSERT INTO FailedJSON SET line = ?', logline)
-    return 0
+catch(err){
+  var msg = 'DataFuseUserActions: ' + err + ' | input: ' + JSON.stringify(e)
+  print(msg) 
+  db.command('INSERT INTO Errors Set Function = "DataFuseUserActions", Message = ?', msg)
 }
-for(var k in uat){ e[k] = uat[k] }
-return e
 

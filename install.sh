@@ -96,14 +96,14 @@ esac
 
 # caters to Arm64 Linux/macOS
 case "$(arch)" in
-  aarch64|arm64) # updated to 3.0.34 on 23-Apr-2021 for Arm64
+  aarch64|arm64) # updated to 3.1.12 on 2021-08-19 for Arm64
     ODB_IMAGE="jymcheong/openedr:orientdb" 
     ;;
   x86_64)
-    ODB_IMAGE="orientdb:3.0.34"
+    ODB_IMAGE="orientdb:3.1.12"
     ;;
   *)
-    ODB_IMAGE="orientdb:3.0.34"
+    ODB_IMAGE="orientdb:3.1.12"
     ;;
 esac
 
@@ -117,6 +117,7 @@ echo "SFTPCONF_PORT=$SFTPCONF_PORT" >> .env
 echo "SFTP_PORT=$SFTP_PORT" >> .env
 echo "C2_PATH=./backend/sftp/response/" >> .env
 echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
+echo "SAMPLES_ARCHIVE_PATH=./backend/sftp/samplearchive" >> .env
 
 # sftp/scripts/generateSFTPconf.sh will read this file
 # to generate sftpconf.zip, which is needed at client-side

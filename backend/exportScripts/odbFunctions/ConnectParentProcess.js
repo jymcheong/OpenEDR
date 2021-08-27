@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-null
-
 //parameters
 
 
@@ -20,6 +11,8 @@ ConnectParentProcess
 javascript
 
 //code
+return // no longer in use but keeping for reference
+
 var db = orient.getDatabase();
 
 var r = db.query('select from (select from pc where ToBeProcessed=true order by id asc limit 100) order by Hostname asc, RecordNumber asc')
@@ -52,10 +45,8 @@ function handleRetry(child_rid){
 
 // used when retry complete still no parent
 function recoverSeq(child) {
-    var parentEXE = child.field('ParentImage').split("\\")
-	parentEXE = parentEXE[parentEXE.length - 1]
-    var childEXE = child.field('Image').split("\\")
-	childEXE = childEXE[childEXE.length - 1]
+    var parentEXE = child.field('ParentImage').split('\\').reverse()[0];
+    var childEXE = child.field('Image').split('\\').reverse()[0];
     var partialSeq = parentEXE + ' > ' + childEXE
     var seq = db.command('UPDATE seq SET Count = Count + 1 UPSERT RETURN AFTER @rid, Sequence, Count, Score \
 						  WHERE Sequence like "%' + partialSeq + '"')
@@ -115,7 +106,14 @@ function connectParent(child) {
     } 
 }
 
-for(var i = 0; i < r.length; i++){ 
-	if(connectParent(r[i]) == false) break;
+try{
+  for(var i = 0; i < r.length; i++){ 
+      if(connectParent(r[i]) == false) break;
+  }
+}
+catch(err) {
+  var msg = 'ConnectParentProcess exception: ' + err 
+  print(msg) 
+  db.command('INSERT INTO Errors Set Message = ?', msg) 
 }
 

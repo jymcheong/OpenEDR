@@ -6,7 +6,7 @@
 const { dir } = require("console");
 const fs = require("fs")
 const odb = new (require('../../common/odb').Odb)();
-const fields = ["@version","@class","idempotent","parameters","name","language","code"]
+const fields = ["parameters","name","language","code"]
 
 async function exportFunctions(){
     _session = await odb.startSession()

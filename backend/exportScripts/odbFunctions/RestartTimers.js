@@ -1,15 +1,6 @@
 //@type
 d
 
-//@version
-1
-
-//@class
-OFunction
-
-//idempotent
-null
-
 //parameters
 null
 
@@ -20,7 +11,7 @@ RestartTimers
 javascript
 
 //code
-// Called from insertEvent.js
+// Called from insertEvent.js; not in use
 
 var db = orient.getDatabase();
 
