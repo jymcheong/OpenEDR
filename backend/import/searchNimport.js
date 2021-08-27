@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const yaml = require('yaml');
-const connectODB = require('../../common/orientdb').connectODB;
+const odb = new (require('../../common/odb').Odb)();
 
 var searchRecursive = function(dir, pattern) {
   // This is where we store pattern matches of all files inside the directory
@@ -44,9 +44,11 @@ function parseYML(fullpath){
   })
 }
 
-
+/***
+ * LOLdata holds yml directory of https://github.com/LOLBAS-Project/LOLBAS
+ */
 (async function(){
-  _session = await connectODB()
+  _session = await odb.startSession()
   console.log('connected to target ODB!')
   var count = 0;
   var files = searchRecursive('./backend/import/LOLdata', '.yml'); // replace dir and pattern

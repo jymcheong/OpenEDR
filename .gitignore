@@ -25,3 +25,4 @@ backend/sftp/IPaddresses
 clientconf/index.html
 clientconf/sftpconf.zip
 backend/extensions/intezer/intezerAPI/node_modules/*
+*.exe

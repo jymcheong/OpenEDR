@@ -1,5 +1,28 @@
 const event = {}
 
+//Captured File 
+event['CapturedFile'] = `
+
+### <font color="#AAAAAA" size=2>Original Path</font>
+{{event.OriginalPath}}
+
+### <font color="#AAAAAA" size=2>Uploaded Filename</font>
+{{event.UploadedFileName}}
+
+
+{{if(options.event.IntezerTotalGeneCount != undefined)}}### <font color="#AAAAAA" size=2>Intezer Analysis Results</font>{{/if}}
+
+{{if(options.event.IntezerVerdict != undefined)}}### <font color="#AAAAAA" size=2>Verdict</font>: {{event.IntezerVerdict}}{{/if}}
+
+{{if(options.event.IntezerTotalGeneCount != undefined)}}### <font color="#AAAAAA" size=2>Total Gene-Count</font>: {{event.IntezerTotalGeneCount}}{{/if}}
+
+{{if(options.event.IntezerTotalUniqueGeneCount != undefined)}}### <font color="#AAAAAA" size=2>Total Unique Gene-Count</font>: {{event.IntezerTotalUniqueGeneCount}}{{/if}}
+
+{{if(options.event.IntezerTotalCommonGeneCount != undefined)}}### <font color="#AAAAAA" size=2>Total Common Gene-Count</font>: {{event.IntezerTotalCommonGeneCount}}{{/if}}
+
+`
+
+//SYSMON Event ID 25
 event['ProcessTampering'] = `
 
 ### <font color="#AAAAAA" size=2>Image</font>

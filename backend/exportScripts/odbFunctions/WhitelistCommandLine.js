@@ -18,14 +18,20 @@ javascript
 // 1) HostUserPrivilegeCommandLine or HUPC
 // 2) CommandLineCluster
 // Called from frontend.js
+try{
+    var db = orient.getDatabase();
+    var r = db.query("traverse in('CommandLineSighted'), out('SimilarTo') from " + rid);
 
-var db = orient.getDatabase();
-var r = db.query("traverse in('CommandLineSighted'), out('SimilarTo') from " + rid);
-
-for(var i = 0; i < r.length; i++) {
-  print('WhitelistCommandLine: ' + r[i].field('@class') )
-	if(r[i].field('@class') == 'HostUserPrivilegeCommandLine' || r[i].field('@class') == 'CommandLineCluster')     {
-      	db.command('update ? set Score = 0, BaseLined = true', r[i].field('@rid'));
+    for(var i = 0; i < r.length; i++) {
+      print('WhitelistCommandLine: ' + r[i].field('@class') )
+      if(r[i].field('@class') == 'HostUserPrivilegeCommandLine' || r[i].field('@class') == 'CommandLineCluster')     {
+        db.command('update ? set Score = 0, BaseLined = true', r[i].field('@rid'));
+      }
     }
+}
+catch(err){
+  var msg = 'WhitelistCommandLine: ' + err + ' | input: ' + rid
+  print(msg) 
+  db.command('INSERT INTO Errors Set Function = "WhitelistCommandLine", Message = ?', msg)
 }
 

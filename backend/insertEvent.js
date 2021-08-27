@@ -24,7 +24,7 @@ async function startWork(){
         fs.readdir(process.env.UPLOAD_PATH, function(err, items) {
             console.log(items); 
             for (var i=0; i<items.length; i++) {
-                if(items[i].indexOf('rotated')>= 0 && items[i].indexOf('.uploaded')>= 0) {
+                if(items[i].indexOf('rotated')>= 0) {
                     console.log('adding ' + items[i]);
                     fileQueue.push(process.env.UPLOAD_PATH + '/' + items[i].replace('.uploaded',''))
                     if(fs.existsSync(items[i])) { 
@@ -45,15 +45,12 @@ async function startWork(){
                 processFile(fileQueue.shift());
             }
         })
-        checkSession()
-        startCleanUp() //clean up TriggerProcessing table
+        checkSession()        
     }
     else console.error('Fail to connect to OrientDB!')
 }
 
 startWork();
-
-//processFile('/tmp/events.txt') // test single file
 
 //https://stackoverflow.com/questions/16010915/parsing-huge-logfiles-in-node-js-read-in-line-by-line
 function processFile(filepath) {
@@ -106,7 +103,12 @@ function deleteFile(filepath) {
       });
 }
 
-//push most of the logic into server side function
+/**
+ * 
+ * @param {escaped JSON line of Windows Event} eventline 
+ * @param {String for multi-tenancy} organisation 
+ * @returns 
+ */
 async function processLine(eventline, organisation) {
     if(session == null) return
     try {
@@ -127,12 +129,17 @@ async function processLine(eventline, organisation) {
     }
 }
 
+/**
+ * Checks session by calling ODB ConnectParentProcess() 
+ * which connects parent to child processes.
+ * Reconnects when session is dead.
+ */
 async function checkSession(){
     if(session == null) return;
     setInterval(async function(){
         try {   
             if(session != null) {
-                await session.query('SELECT ConnectParentProcess()').all();                    
+                await session.query('SELECT 1').all();                    
             }
             else {
                 session = await odb.startSession();
@@ -146,27 +153,13 @@ async function checkSession(){
     },3000);
 }
 
-async function startCleanUp(){
-    if(session == null) return;
-    setInterval(async function(){
-        try {   
-            if(session != null) {
-                session.command('delete from tp where (sysdate().asLong() - TimeStamp.asLong())/1000 > 90');                    
-            }            
-        }
-        catch(err) {
-            console.error(err)
-            
-        }
-    },30000);
-}
-
 /**
  * Pre-process message to extract fields from 4688 & 4689 Message fields.
- * Note that Nxlog is not extracting the fields & ODB-AddEvent function removes Message field due to data-deduplication
+ * Note that Nxlog is not extracting the fields & ODB-AddEvent function 
+ * removes Message field due to data-deduplication
  * 
  * @param {string} msg JSON event message
- * @returns 
+ * @returns JSON event string with extracted fields
  */
  async function preProcess(msg) {
     return new Promise((resolve, reject) => {

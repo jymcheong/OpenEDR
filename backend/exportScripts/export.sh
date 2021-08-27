@@ -3,7 +3,7 @@
 export ORIENTDB_ROOT_PASSWORD=`cat .env |grep PASSWORD |sed 's/ORIENTDB_PASSWORD=//g'`
 
 # export ONLY schema
-sudo docker exec -it orientdb console.sh "use remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; export database /openedrserver/backend/exportScripts/schema.gz -includeRecords=false;"
+sudo docker exec -it orientdb /bin/bash -c "/orientdb/bin/console.sh use \"remote:localhost/DataFusion root $ORIENTDB_ROOT_PASSWORD; export database /openedrserver/backend/exportScripts/schema.gz -includeRecords=false;\""
 
 # export functions, OUSER & OROLE for FRESH installation; see ../orientdb/entrypoint
 # Why using a script? The official EXPORT DATABASE is very slow, the larger the DB, the slower!

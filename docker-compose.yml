@@ -2,20 +2,18 @@ version: '2'
 services:
   orientdb:
     # determined in installcontainers.sh
-    image: ${ODB_IMAGE}
+    image: openjdk:11-jdk-slim
     command: /entrypoint # this is to override for official images
     container_name: orientdb
     # means map current user to container's root
     user: ${USERID}:0
     restart: always
     volumes:
-      - './orientdb/databases:/orientdb/databases'
-      - './orientdb/orient.pid:/orientdb/bin/orient.pid'
-      - './orientdb/backup:/orientdb/backup'
-      - './orientdb/config:/orientdb/config'
       - './:/openedrserver'            
       - './orientdb/entrypoint:/entrypoint'
-      - './orientdb/log:/orientdb/log'
+      # entrypoint will extract tar.gz into odb, to avoid building images
+      - './orientdb/odb:/orientdb'      
+      
     networks:
         - openedr-tier
     ports:
@@ -25,6 +23,7 @@ services:
       - '${FRONTEND_IP}:2480:2480'
 
   openedr:
+    #image: keymetrics/pm2:14-slim
     image: keymetrics/pm2:16-buster
     container_name: openedr-app
     user: ${USERID}:0

@@ -19,5 +19,5 @@ var _edgeLookup = {'ProcessTerminate':'Terminated', 'PipeCreated':'CreatedPipe',
 if(classname in _edgeLookup){
 	return _edgeLookup[classname];
 }
-else return "ProcessGuid";
+else return "ProcessGuid"; // this is a catch all edge class
 
