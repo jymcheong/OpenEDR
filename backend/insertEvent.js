@@ -21,15 +21,12 @@ async function startWork(){
     session = await odb.startSession();
     if(session != null) {
         console.log('ODB client & session started')
-        fs.readdir(process.env.UPLOAD_PATH, function(err, items) {
+        fs.readdir(process.env.TOBEINSERTED_PATH, function(err, items) {
             console.log(items); 
             for (var i=0; i<items.length; i++) {
                 if(items[i].indexOf('rotated')>= 0) {
                     console.log('adding ' + items[i]);
-                    fileQueue.push(process.env.UPLOAD_PATH + '/' + items[i].replace('.uploaded',''))
-                    if(fs.existsSync(items[i])) { 
-                        fs.rmdirSync(items[i]); 
-                    }
+                    fileQueue.push(process.env.TOBEINSERTED_PATH + '/' + items[i])
                 }
             }
             processFile(fileQueue.shift())
@@ -40,12 +37,15 @@ async function startWork(){
         .on('addDir', path => {
             if(path.indexOf('.uploaded') > -1 && path.indexOf('rotated') > -1){
                 //delay to deal with slow SFTP client-side error of missing directory
-                setTimeout(function(){  fs.rmdir(path, function(err){}) }, 500); 
-                fileQueue.push(path.replace('.uploaded',''));
+                setTimeout(function(){  fs.rmdir(path, function(err){}) }, 500);
+                let sourcePath = path.replace('.uploaded','')
+                let destPath = path.replace('/uploads','/tobeinserted').replace('.uploaded','')
+                fs.renameSync(sourcePath, destPath)
+                fileQueue.push(destPath);
                 processFile(fileQueue.shift());
             }
         })
-        checkSession()        
+        checkSession()
     }
     else console.error('Fail to connect to OrientDB!')
 }
@@ -81,7 +81,7 @@ function processFile(filepath) {
             console.log('Total line count: ' + lineCount) // tally with row count
             console.log('Total row count:' + rowCount)
             console.log('Delta: ' + (lineCount - rowCount))     
-            setTimeout(function(){ deleteFile(filepath) },200)
+            setTimeout(function(){ deleteFile(filepath) }, 200)
             s = null
             if(fileQueue.length > 0){
                 processFile(fileQueue.shift())

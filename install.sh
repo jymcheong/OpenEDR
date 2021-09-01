@@ -2,15 +2,9 @@
 
 #
 # This script was tested on Ubuntu 16-20 server (WSL2 inclusive) & macOS (Intel & M1)
-# git clone ...
+# git clone ... or download the server sub-directory zip file to extract
 # cd into new directory
 # ./install.sh
-
-if ! command -v curl &> /dev/null
-then
-    echo "curl is missing! Please install to proceed further."
-    exit
-fi
 
 if ! command -v docker &> /dev/null
 then
@@ -80,12 +74,8 @@ prompt_address_selection "Select SFTP address (set to $DEFAULT_ADDRESS after $TI
 SFTP_IP=$return_value
 echo "Selected $SFTP_IP for SFTP event-collection access."
 
-# this only works in linux with ACL enabled
-# -m (modify) d (default) u (user) -w- (write-only)
-if command -v setfacl &> /dev/null
-then
-    sudo setfacl -m d:u::-w- ./backend/sftp/uploads
-fi
+# files will be move the instant it is closed, so low risk
+sudo chmod 777 ./backend/sftp/uploads
 
 case $OSTYPE in
   "darwin"*)
@@ -116,14 +106,14 @@ echo "SFTP_HOST=$SFTP_IP" >> .env
 echo "SFTPCONF_PORT=$SFTPCONF_PORT" >> .env
 echo "SFTP_PORT=$SFTP_PORT" >> .env
 echo "C2_PATH=./backend/sftp/response/" >> .env
-echo "UPLOAD_PATH=./backend/sftp/tobeinserted" >> .env
+echo "TOBEINSERTED_PATH=./backend/sftp/tobeinserted" >> .env
+echo "UPLOAD_PATH=./backend/sftp/uploads" >> .env
 echo "SAMPLES_ARCHIVE_PATH=./backend/sftp/samplearchive" >> .env
 
 # sftp/scripts/generateSFTPconf.sh will read this file
 # to generate sftpconf.zip, which is needed at client-side
 echo $SFTP_IP > ./backend/sftp/IPaddresses
 
-touch orientdb/orient.pid
 # docker-compose will take care of the rest of the services
 sudo docker-compose up -d
 

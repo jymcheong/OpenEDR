@@ -104,8 +104,6 @@ services:
       - './backend/sftp/keys:/etc/ssh/keys'
       # events are uploaded to this directory monitored by incrontabd
       - './backend/sftp/uploads:/home/uploader/uploads'
-      # ./backend/sftp/dockerbuild/files/incron.sh will move contents here
-      - './backend/sftp/tobeinserted:/home/tobeinserted'
       # corresponds to .env C2_PATH=/openedrserver/backend/sftp/response/
       - './backend/sftp/response:/home/uploader/response:ro'
       - './backend/sftp/scripts:/etc/sftp.d'
