@@ -22,23 +22,25 @@ try{
        print('======= found first smss.exe in 4688 ====== for ' + e.Organisation + '|' + e.Hostname)
        e.Sequence = 'System > smss.exe'
        db.command('UPDATE LineageLookup set Sequence = "System" \
-                   UPSERT WHERE Organisation = ? AND Hostname = ? AND PID = 4', e.Organisation, e.Hostname)
+                   UPSERT WHERE Organisation = ? AND Hostname = ? AND PID = 4 AND PPID = 0', e.Organisation, e.Hostname)
        db.command('UPDATE LineageLookup set Sequence = "System > smss.exe" \
-                   UPSERT WHERE Organisation = ? AND Hostname = ? AND PID = ?', e.Organisation, e.Hostname, e.PID)
+                   UPSERT WHERE Organisation = ? AND Hostname = ? AND PID = ? AND PPID = 4 AND Image = ?', e.Organisation, e.Hostname, e.PID, e.NewProcessName)
     }
     else{
-      var parent = db.query('select Sequence from LineageLookup WHERE Organisation = ? AND Hostname = ? AND PID = ? order by @rid desc limit 1', 
-                            e.Organisation, e.Hostname, e.PPID)
+      var parent = db.query('select Sequence from LineageLookup WHERE Organisation = ? AND Hostname = ? AND PID = ? AND Image = ?', 
+                            e.Organisation, e.Hostname, e.PPID, e.CreatorProcessName)
       if(parent.length > 0) {
         var newProcessEXEname = e.NewProcessName.split('\\').reverse()[0];
         var newSequence = parent[0].field('Sequence') + ' > ' + newProcessEXEname
-        e.Sequence = newSequence
-        db.command('UPDATE LineageLookup set Sequence = ? UPSERT WHERE Organisation = ? AND Hostname = ? \
-                    AND PID = ?', newSequence, e.Organisation, e.Hostname, e.PID)
+        if(newSequence.indexOf('null') < 0) {
+        	e.Sequence = newSequence
+        	db.command('UPDATE LineageLookup set Sequence = ? UPSERT WHERE Organisation = ? AND Hostname = ? \
+                    AND PID = ? AND PPID = ? AND Image = ?', newSequence, e.Organisation, e.Hostname, e.PID, e.PPID, e.NewProcessName)
+        }
         //print('UpdateLineageLookup: ' + newSequence)
       }
       else {
-        print('UpdateLineageLookup could not find parent sequence for processPID: ' + e.PID + ' with PPID: ' + e.PPID)
+        print('UpdateLineageLookup could not find parent sequence for processPID: ' + e.PID + ' with PPID: ' + e.PPID + ' > ' + e.NewProcessName)
       }
     }
 }
