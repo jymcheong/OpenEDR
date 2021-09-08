@@ -40,24 +40,28 @@ try{
         }
         else { // use ProcessCreate first
             var parent = db.query('SELECT FROM ProcessCreate \
-                         where Organisation = ? AND Hostname = ? AND ProcessGuid = ?', e.Organisation, e.Hostname, e.ParentProcessGuid)
+                         where Organisation = ? AND Hostname = ? AND ProcessGuid = ?', e['Organisation'], e['Hostname'], e['ParentProcessGuid'])
             if(parent.length > 0) {
                    e['ParentRid'] = '' + parent[0].field('@rid')
                    //print('ParentRID : ' + e['ParentRid'])
                    if(parent[0].field('Sequence') != null && parent[0].field('Sequence').indexOf('System') == 0) {
                       var exename = e['Image'].split('\\').reverse()[0];
-                      e.Sequence = parent[0].field('Sequence') + ' > ' + exename
+                      e['Sequence'] = parent[0].field('Sequence') + ' > ' + exename
                    }
             }
             else{
                 print('using LineageLookup...')
-                var seq = db.query('SELECT FROM LineageLookup WHERE Organisation = ? AND Hostname = ? AND PID = ? AND PPID = ? AND Image = ?', 
-                                   e.Organisation, e.Hostname, e.ProcessId, e.ParentProcessId, e.Image)
+                var seq = db.query('SELECT FROM LineageLookup WHERE Organisation = ? AND Hostname = ? AND PID = ? AND Image = ?', 
+                                   e.Organisation, e.Hostname, e.ProcessId, e.Image)
                 if(seq.length > 0){ 
-                  e.Sequence = seq[0].field('Sequence') 
+                  e['Sequence'] = seq[0].field('Sequence') 
                 }
                 else{ // otherwise try to find the parent ProcessCreate
-                    print('Microsoft_Windows_Sysmon: Unable to extract lineage for: ' + e.Image)
+                    //print('Microsoft_Windows_Sysmon: Unable to extract lineage for: ' + e['Image'])
+                    print('try actual 4688 lookup')
+                    var CreatedProcess4688 = db.query('SELECT FROM CreatedProcess4688 WHERE Organisation = ? AND Hostname = ? AND PID = ? AND NewProcessName = ?', e.Organisation, e.Hostname, e.ProcessId, e.Image)
+                    if(CreatedProcess4688.length > 0) print(CreatedProcess4688[0].field('Sequence'))
+                    else print('Not in CreatedProcess4688 too! ' + e.Image)
                 }
              }
         }
