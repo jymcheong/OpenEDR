@@ -77,6 +77,10 @@ try {
     // post-insertion processing...
     // Linking edges that need RID of inserted record is done here
     switch(classname) { 
+    case "CreatedProcess4688":
+            UpdateLineageLookup(e)
+            break;
+        
     case "ProcessCreate":
             CheckForeign(r[0])
             CheckSpoof(r[0])

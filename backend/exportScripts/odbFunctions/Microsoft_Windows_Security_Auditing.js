@@ -19,7 +19,7 @@ try{
 
     if(e.EventID == 4688){
       e["_classname"] = 'CreatedProcess4688'  
-      UpdateLineageLookup(e)
+      //UpdateLineageLookup(e)
     }
     return e
 }
