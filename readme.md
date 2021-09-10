@@ -16,7 +16,7 @@ To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
 ## Installation Steps
 With a sudoer account (but **DO NOT preceed command with `sudo`**), install the backend with: 
 
-`curl -L https://github.com/jymcheong/OpenEDR/tarball/dev | tar xz && mv jymcheong* openEDR && cd openEDR && ./install.sh`
+`curl -L https://github.com/jymcheong/OpenEDR/tarball/master | tar xz && mv jymcheong* openEDR && cd openEDR && ./install.sh`
 
 **PLEASE USE A UBUNTU 16-20 SERVER, either physical or Virtual Machine.** [But why not on Ubuntu/whatever-linux desktop directly?](https://github.com/jymcheong/OpenEDR/issues/15)
 
