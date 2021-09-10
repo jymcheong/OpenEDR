@@ -166,7 +166,7 @@ async function checkSession(){
       try{
         let event = JSON.parse(msg)
         // Windows audit event 4688 & 4689 are generated ahead of respective Sysmon events
-        if((event.EventID == 4688 || event.EventID == 4689) && event.Channel == 'Security') {      
+        if((event.EventID == 4688 || event.EventID == 4689) && event.Channel == 'Security' && 'Message' in event) {      
           let msg468X = event.Message.split('\r\n')
           for(var i=3; i< msg468X.length; i++) {            
             let match468X = msg468X[i].match(/\t(.+)\:\t+(.+)/mi)
@@ -187,6 +187,11 @@ async function checkSession(){
             
             let NewPID = event.Message.match(/\s+New Process ID\:\s+(.+)\s+/mi)
             if(NewPID.length > 1) event.PID = parseInt(NewPID[1]) 
+
+            if(event.PPID == 4 && 'NewProcessName' in event){
+                let newProcessName = event.NewProcessName.split('\\').reverse()[0]
+                event.Sequence = 'System > ' + newProcessName
+            }
           }
           if(event.EventID == 4689){
             let PID = event.Message.match(/\s+Process ID\:\s+(.+)\s+/mi)
