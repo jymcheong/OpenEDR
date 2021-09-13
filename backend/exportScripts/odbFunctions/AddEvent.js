@@ -78,7 +78,7 @@ try {
     // Linking edges that need RID of inserted record is done here
     switch(classname) { 
     case "CreatedProcess4688":
-            UpdateLineageLookup(e)
+            if(!('Sequence' in e)) UpdateLineageLookup(e)
             break;
         
     case "ProcessCreate":

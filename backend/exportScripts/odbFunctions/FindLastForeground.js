@@ -23,7 +23,7 @@ try{
     // already linked
     if(pc.field('LFG') > 0) return
 
-    var fgProcess = db.query("select from processcreate where Hostname = ? AND Organisation = ? AND id < ? AND (ProcessType = 'AfterExplorerForeground' OR (Image like '%explorer.exe' AND ProcessType = 'BeforeExplorer')) order by id desc limit 1", pc.field('Hostname'), pc.field('Organisation'), pc.field('id'))
+    var fgProcess = db.query("select from processcreate where Organisation = ? AND Hostname = ? AND id < ? AND (ProcessType = 'AfterExplorerForeground' OR (Image like '%explorer.exe' AND ProcessType = 'BeforeExplorer')) order by id desc limit 1", pc.field('Organisation'), pc.field('Hostname'), pc.field('id'))
 
     if(fgProcess.length == 0) return
 

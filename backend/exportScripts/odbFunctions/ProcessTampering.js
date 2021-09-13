@@ -13,7 +13,7 @@ javascript
 //code
 try{
     var db = orient.getDatabase();
-    var pc = db.query('SELECT from ProcessCreate WHERE Hostname = ? AND Organisation = ? AND ProcessGuid = ?',r.field('Hostname'),r.field('Organisation'),r.field('ProcessGuid'))	
+    var pc = db.query('SELECT from ProcessCreate WHERE Organisation = ? AND Hostname = ? AND ProcessGuid = ?',r.field('Organisation'),r.field('Hostname'),r.field('ProcessGuid'))	
 
     if(pc.length > 0) {
     var n = db.query("traverse in('CommandLineSighted'), out('SimilarTo') from " + pc[0].field('@rid'));

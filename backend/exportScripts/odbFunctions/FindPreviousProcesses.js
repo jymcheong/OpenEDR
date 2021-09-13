@@ -22,10 +22,10 @@ try{
     pc = pc[0]
 
     // setup the SQL statement
-    var stm = "select from (select from processcreate where Hostname = ? AND Organisation = ? AND EventTime >= ? AND EventTime <= ?) where id <= ? order by id desc limit " + n
+    var stm = "select from (select from processcreate where Organisation = ? AND Hostname = ? AND EventTime >= ? AND EventTime <= ?) where id <= ? order by id desc limit " + n
 
     // fetch N prior ProcessCreates
-    var earlierProcesses = db.query(stm, pc.field('Hostname'), pc.field('Organisation'), pc.field('ET'), pc.field('EventTime'), pc.field('id'))
+    var earlierProcesses = db.query(stm, pc.field('Organisation'), pc.field('Hostname'), pc.field('ET'), pc.field('EventTime'), pc.field('id'))
     if(earlierProcesses.length == 0) return
 
     // link them starting from the earliest
