@@ -25,9 +25,9 @@ try{
 
         if(lp[0].getProperty('Count') == 1 && e['ProcessName'] != 'System'){ // new listening port
             db.command('CREATE EDGE ListeningPortSighted FROM ? TO \
-            (SELECT FROM ProcessCreate WHERE Hostname = ? AND Organisation = ? AND \
-            ProcessId = ? order by id desc LIMIT 1) RETRY 10 WAIT 10', lp[0].getProperty('@rid'),e['Hostname'],
-            e['Organisation'], e['ProcessId'])
+            (SELECT FROM ProcessCreate WHERE Organisation = ? AND Hostname = ? AND \
+            ProcessId = ? order by id desc LIMIT 1) RETRY 10 WAIT 10', lp[0].getProperty('@rid'),e['Organisation'],
+            e['Hostname'], e['ProcessId'])
         }	
     }
 
@@ -48,4 +48,6 @@ catch(err){
   print(msg) 
   db.command('INSERT INTO Errors Set Function = "DataFuseNetwork_v2", Message = ?', msg)
 }
+
+
 

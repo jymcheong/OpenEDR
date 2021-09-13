@@ -24,8 +24,8 @@ try{
     print('True-parent processGuid: ' + r.field('TrueParentProcessGuid'))
 
     // link spoof alert vertex to ProcessCreate
-    var targetPC = db.query('SELECT FROM ProcessCreate WHERE ProcessGuid = ? AND Hostname = ? AND Organisation = ? limit 1',
-                            r.field('ProcessGuid'), r.field('Hostname'), r.field('Organisation') )
+    var targetPC = db.query('SELECT FROM ProcessCreate WHERE Organisation = ? AND Hostname = ? AND ProcessGuid = ? limit 1',
+                            r.field('Organisation'), r.field('Hostname'), r.field('ProcessGuid') )
     if(targetPC.length == 0) return
     targetPC = targetPC[0]
     retry("db.command('CREATE EDGE SpoofedParentProcess FROM " + rid + " to " + targetPC.field('@rid') + "')")
@@ -33,16 +33,19 @@ try{
     // link true-parent ProcessCreate to ProcessCreate with spoofed PPID
     var trueParent = null
     if(r.field('TrueParentProcessGuid')) {
-        trueParent = db.query('SELECT FROM ProcessCreate WHERE ProcessGuid = ? AND Hostname = ? \
-    AND Organisation = ? limit 1', r.field('TrueParentProcessGuid'), r.field('Hostname'), r.field('Organisation') )
+        print('SpoofParentProcessId using ' + r.field('TrueParentProcessGuid') + ' to find true parent')
+        trueParent = db.query('SELECT FROM ProcessCreate WHERE Organisation = ? AND Hostname = ? \
+    AND ProcessGuid = ? order by id desc limit 1', r.field('Organisation'), r.field('Hostname'), r.field('TrueParentProcessGuid') )
     }
     else{
-        trueParent = db.query('SELECT FROM ProcessCreate WHERE ProcessId = ? AND Hostname = ? \
-    AND Organisation = ? limit 1', r.field('TrueParentProcessId'), r.field('Hostname'), r.field('Organisation') )
+        print('SpoofParentProcessId using ' + r.field('TrueParentProcessId') + ' to find true parent')      
+        trueParent = db.query('SELECT FROM ProcessCreate WHERE Organisation = ? AND Hostname = ? \
+    AND ProcessId = ? order by id desc limit 1', r.field('Organisation'), r.field('Hostname'), r.field('TrueParentProcessId') )
     }
 
     if(trueParent.length == 0) return
     trueParent = trueParent[0]
+    print('SpoofParentProcessId found true parent, linking...')
     retry("db.command('CREATE EDGE TrueParentOf FROM " + trueParent.field('@rid') + " to " + targetPC.field('@rid') + "')")
     retry("db.command('UPDATE "+ rid + " SET ToBeProcessed = false')")
 

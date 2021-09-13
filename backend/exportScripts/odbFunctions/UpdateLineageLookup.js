@@ -11,20 +11,20 @@ UpdateLineageLookup
 javascript
 
 //code
-// called by Microsoft_Windows_Security_Auditing to use 4688 to update lineage lookup table
+// called by Microsoft_Windows_Security_Auditing to use 4688 events to update lineage lookup table
 try{
     var db = orient.getDatabase();
 
     if(!('NewProcessName' in e)) return // can't do anything
 
-    if(e.PPID == 4 && e.NewProcessName.indexOf('smss.exe') > 0){
-       print('')
-       print('======= found first smss.exe in 4688 ====== for ' + e.Organisation + '|' + e.Hostname)
-       e.Sequence = 'System > smss.exe'
-       db.command('UPDATE LineageLookup set Sequence = "System > smss.exe", Image = ?\
-                   UPSERT WHERE Organisation = ? AND Hostname = ? AND PID = ?', e.NewProcessName, e.Organisation, e.Hostname, e.PID)
+    if('Sequence' in e){
+       print('Using early sequence: ' + e.Sequence)
+       db.command('UPDATE LineageLookup set Sequence = ?, Image = ?\
+                   UPSERT WHERE Organisation = ? AND Hostname = ? AND PID = ?', 
+                  e.Sequence, e.NewProcessName, e.Organisation, e.Hostname, e.PID)
     }
     else{
+      if(!('CreatorProcessName' in e)) return // can't do anything
       var parent = db.query('select Sequence from LineageLookup WHERE Organisation = ? AND Hostname = ? AND PID = ? AND Image = ?', 
                             e.Organisation, e.Hostname, e.PPID, e.CreatorProcessName)
       

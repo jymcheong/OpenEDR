@@ -24,14 +24,19 @@ try {
     var trueParent = null
 
     if(spoof[0].field('TrueParentProcessGuid')) {
-        trueParent = db.query('SELECT FROM ProcessCreate WHERE ProcessGuid = ? AND Hostname = ? \
-        AND Organisation = ? order by id desc limit 1', spoof[0].field('TrueParentProcessGuid'), r.field('Hostname'), r.field('Organisation') )
+        print('CheckSpoof searching for true parent using ProcessGuid ' + spoof[0].field('TrueParentProcessGuid'))
+        trueParent = db.query('SELECT FROM ProcessCreate WHERE Organisation = ? AND Hostname = ? \
+        AND ProcessGuid = ? order by id desc limit 1', r.field('Organisation'), r.field('Hostname'), spoof[0].field('TrueParentProcessGuid'))
+        print('Checkspoof trueparent length ' + trueParent.length)
     }
     else {
-        trueParent = db.query('SELECT FROM ProcessCreate WHERE ProcessId = ? AND Hostname = ? AND \
-        Organisation = ? order by id desc limit 1',spoof[0].field('TrueParentProcessId'), r.field('Hostname'), 		r.field('Organisation') )
+        print('CheckSpoof searching for true parent using ProcessId ' + spoof[0].field('TrueParentProcessId'))      
+        trueParent = db.query('SELECT FROM ProcessCreate WHERE Organisation = ? AND Hostname = ? AND \
+        ProcessId = ? order by id desc limit 1',r.field('Organisation'), r.field('Hostname'), spoof[0].field('TrueParentProcessId'))
+        print('Checkspoof trueparent length ' + trueParent.length + ' ' + r.field('Organisation') + ' ' + r.field('Hostname'))
     }
     if(trueParent.length > 0) {
+     print('CheckSpoof found true parent, linking...')
      retry("db.command('CREATE EDGE TrueParentOf FROM " + trueParent[0].field('@rid') + " to " + rid + "')")
     }
 
@@ -42,4 +47,5 @@ catch(err){
   print(msg) 
   db.command('INSERT INTO Errors Set Function = "CheckSpoof", Message = ?', msg)
 }
+
 
