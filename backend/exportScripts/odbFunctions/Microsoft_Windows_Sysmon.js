@@ -56,12 +56,8 @@ try{
                 if(seq.length > 0){ 
                   e['Sequence'] = seq[0].field('Sequence') 
                 }
-                else{ // otherwise try to find the parent ProcessCreate
-                    //print('Microsoft_Windows_Sysmon: Unable to extract lineage for: ' + e['Image'])
-                    print('try actual 4688 lookup')
-                    var CreatedProcess4688 = db.query('SELECT FROM CreatedProcess4688 WHERE Organisation = ? AND Hostname = ? AND PID = ? AND NewProcessName = ?', e.Organisation, e.Hostname, e.ProcessId, e.Image)
-                    if(CreatedProcess4688.length > 0) print(CreatedProcess4688[0].field('Sequence'))
-                    else print('Not in CreatedProcess4688 too! ' + e.Image)
+                else{ 
+                     print('Will retry later after insertion for: ' + e.Image)                  
                 }
              }
         }

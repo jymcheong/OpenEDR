@@ -78,16 +78,29 @@ try {
     // Linking edges that need RID of inserted record is done here
     switch(classname) { 
     case "CreatedProcess4688":
-            if(!('Sequence' in e)) UpdateLineageLookup(e)
+            if(!('Sequence' in e)) {
+              //print('Post-insertion sequence extraction for 4688 event: ' + e.NewProcessName) 
+              UpdateLineageLookup(e)
+            }
             break;
         
     case "ProcessCreate":
             CheckForeign(r[0])
             CheckSpoof(r[0])
-            TrackProcess(r[0])
+            TrackBeforeOrAfterExplorer(r[0])
             if('Sequence' in e) {
-              //print('AddEvent (from e.Sequence): ' + e.Sequence) 
               TrackLineage(e.Sequence, r[0].field('@rid'), r[0])
+            }
+        	else { // try to recover & hope that the parent's Sequence is available...
+                var seq = db.query('SELECT FROM LineageLookup WHERE Organisation = ? AND Hostname = ? AND PID = ? AND Image = ?', 
+                                   e.Organisation, e.Hostname, e.ParentProcessId, e.ParentImage)
+                if(seq.length > 0){ 
+                   print('\nAddEvent found parent\'s sequence after ProcessCreate insertion: ' + seq[0].field('Sequence') + '\n')
+                   e.Sequence = seq[0].field('Sequence') + ' > ' + e.Image.split('\\').reverse()[0]
+				   retry("db.command('UPDATE "+ r[0].field('@rid') + " SET Sequence = \"" + e.Sequence + "\"')")
+                   TrackLineage(e.Sequence, r[0].field('@rid'), r[0])
+                }
+                else print('\nPost ProcessCreate insertion fail to find sequence for ' + e.Image + '\n')
             }
             break;
 
