@@ -25,7 +25,8 @@ DEFAULT_ADDRESS=127.0.0.1
 FRONTEND_PORT=8080
 # Endpoint will get the SFTP configuration package
 SFTPCONF_PORT=8888
-# Endpoints uploads to this port
+# Endpoints uploads to this port but if changed,
+# you have to manually change the sftpconf.json within ./clientconf/sftpconf.zip
 SFTP_PORT=2222
 
 # Store all IP addresses of the machine into an array
@@ -84,22 +85,8 @@ case $OSTYPE in
     ;;
 esac
 
-# caters to Arm64 Linux/macOS
-case "$(arch)" in
-  aarch64|arm64) # updated to 3.1.12 on 2021-08-19 for Arm64
-    ODB_IMAGE="jymcheong/openedr:orientdb" 
-    ;;
-  x86_64)
-    ODB_IMAGE="orientdb:3.1.12"
-    ;;
-  *)
-    ODB_IMAGE="orientdb:3.1.12"
-    ;;
-esac
-
 echo "Using $SFTP_IP for SFTP destination address"
 echo "USERID=$UID" > .env
-echo "ODB_IMAGE=$ODB_IMAGE" >> .env
 echo "FRONTEND_IP=$FRONTEND_IP" >> .env
 echo "FRONTEND_PORT=$FRONTEND_PORT" >> .env
 echo "SFTP_HOST=$SFTP_IP" >> .env
