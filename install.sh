@@ -104,16 +104,6 @@ echo $SFTP_IP > ./backend/sftp/IPaddresses
 # docker-compose will take care of the rest of the services
 sudo docker-compose up -d
 
-# because we start docker-compose with sudo, clientconf directory will be owned by root
-# subsequent write to it will fail without changing ownership
-sudo chown $(id -u) ./clientconf
-
-while [ ! -f ./backend/sftp/keys/sftpconf.zip ]; do
-  echo "Wait for sftpconf.zip..."
-  sleep 5 # orientdb/entrypoint will write this file upon successful schema & functions import
-done 
-
-cp ./backend/sftp/keys/sftpconf.zip ./clientconf
 MSG="\$SFTPCONFURL='http://$SFTP_IP:$SFTPCONF_PORT/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))"
 echo $MSG > ./clientconf/index.html
 

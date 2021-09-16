@@ -31,3 +31,5 @@ sed -i 's/{}/'$payload'/g' /etc/ssh/keys/sftpconf/sftpconf.json
 # this zip file is for Upload.exe
 cd /etc/ssh/keys/
 zip -r sftpconf.zip "sftpconf/"
+
+mv sftpconf.zip /home/clientconf

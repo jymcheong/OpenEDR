@@ -1,7 +1,7 @@
 version: '2'
 services:
   orientdb:
-    # determined in installcontainers.sh
+    # this image has multi-architecture intel & Arm64
     image: openjdk:11-jdk-slim
     command: /entrypoint # this is to override for official images
     container_name: orientdb
@@ -102,6 +102,7 @@ services:
     volumes:
       - './backend/sftp/log:/var/log'
       - './backend/sftp/keys:/etc/ssh/keys'
+      - './clientconf:/home/clientconf'
       # events are uploaded to this directory monitored by incrontabd
       - './backend/sftp/uploads:/home/uploader/uploads'
       # corresponds to .env C2_PATH=/openedrserver/backend/sftp/response/

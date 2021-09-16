@@ -84,9 +84,8 @@ if [ ! -f /openedrserver/orientdb/import_completed ]; then
     echo "======================================="
     echo "root password: "$ORIENTDB_ROOT_PASSWORD
     echo "======================================="
-    echo "Restarting in 10 seconds..."
-    
-    sleep 10
+    echo "Restarting..."    
+    # if we don' restart n container, somehow there's this result set not close warning...
     shutdown.sh 
     wait $child
 else
