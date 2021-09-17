@@ -38,11 +38,11 @@ Simply visit:
 http://<YOUR_SFTP_RECEIVER_IP>:8888/
 ```
 
-**If the page does not load, it means there's some connectivity issues to resolve.** 
+**If the page does not load, it means there's some connectivity issues to resolve.** Otherwise you will see Powershell commands for installing host agents, similar to the following (within the bigger red box):
 
 ![connectivityTest](connectivityTest.png)
 
-Otherwise you will see Powershell commands for installing host agents. **Copy everything.**
+ **Copy everything.**
 
 ### Use Powershell  to install host agents
 
