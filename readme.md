@@ -38,7 +38,7 @@ http://<YOUR_SFTP_RECEIVER_IP>:8888/
 
 **If the page does not load, it means there's some connectivity issues to resolve.** 
 
-Otherwise you will see Powershell commands for installing host agents. The first command sets the path to the SFTP configuration zip file.
+Otherwise you will see Powershell commands for installing host agents. **Copy everything.**
 
 ### Use Powershell commands to install host agents
 
