@@ -8,7 +8,7 @@ Click thumbnail below to watch:
 
 * Tested ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) **Ubuntu 16-20.04 LTS servers**, with (minimally) 1 vCPU, 4GB RAM & 50GB disk (note that Ubuntu 20 has wonky DNS that may affect installation).
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit
-* Windows endpoints needs TCP port 2222 & 8888 to reach backend (Pls check firewall(s) settings, eg. after backend installing, use Windows endpoint to visit http://SFTP_RECEIVER_IP:8888)
+* Windows endpoints needs to reach backend TCP port 2222 & 8888 
 
 ## Installation Steps
 *DO NOT preceed with `sudo` **for Ubuntu/Debian & MacOS** (start a shell session & run the following):*
