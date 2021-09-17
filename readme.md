@@ -28,7 +28,7 @@ The installation scripts (regardless Windows or non-Windows) will prompt you to 
 
 Kudos to [YJ's contribution for this enhancement](https://www.notion.so/jymcheong/Prompt-IP-address-selection-during-backend-installation-b1d21b69cc3c4e3aad98802f0a71ba1d).
 
-### Testing Connection... 
+### Testing Connection between Windows endpoint -> Backend
 
 Simply visit:
 
@@ -50,6 +50,7 @@ Go your backend, use `docker logs -f orientdb` & you should see something like t
 
 - This is the log console of OrientDB where all the events are stored
 - This is useful for **single** endpoint exploration, for instance as a pen-tester, you can see in real-time what kind of process sequence as a result of executing your payload.
+- As a student, you can see the repeated patterns whenever Windows reboot or you fired up typical apps like Browser, MS-Office & so on...
 
 ## Run a Quick Test!
 
