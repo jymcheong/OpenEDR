@@ -4,7 +4,7 @@ Click thumbnail below to watch:
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5YeH1RwzqXU/0.jpg)](https://www.youtube.com/watch?v=5YeH1RwzqXU)
 
 # Getting Started
-**Use a sudoer account for Ubuntu/Debian or macOS docker host**. 
+**Use a sudoer account for Ubuntu/Debian or macOS docker host** for backend installation. For Windows as backend, need Pro or higher editions.
 
 * Tested ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) **Ubuntu 16-20.04 LTS servers**, with (minimally) 1 vCPU, 4GB RAM & 50GB disk (note that Ubuntu 20 has wonky DNS that may affect installation).
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit
