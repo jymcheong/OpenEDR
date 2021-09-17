@@ -40,11 +40,11 @@ http://<YOUR_SFTP_RECEIVER_IP>:8888/
 
 Otherwise you will see Powershell commands for installing host agents. **Copy everything.**
 
-### Use Powershell commands to install host agents
+### Use Powershell  to install host agents
 
 **Please use admin powershell session to run those commands**. You should REBOOT the Windows endpoint before proceeding...
 
-Go your backend, use `docker logs -f orientdb` & you should see something like this:
+Go **your backend** (NOT the Windows endpoint), use `docker logs -f orientdb` & you should see something like this:
 
 ![Screenshot 2021-09-17 at 9.08.01 AM](./orientdbLogging.png)
 
