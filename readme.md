@@ -3,32 +3,56 @@ Click thumbnail below to watch:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5YeH1RwzqXU/0.jpg)](https://www.youtube.com/watch?v=5YeH1RwzqXU)
 
-# Shout-Outs
-To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
-
 # Getting Started
-**Use a sudoer account for Ubuntu or macOS docker host**. For Windows, please refer to https://github.com/jymcheong/OpenEDR/issues/3). 
+**Use a sudoer account for Ubuntu/Debian or macOS docker host**. 
 
-* Tested backend installation ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) on Ubuntu 16-20.04 LTS servers, with (at least) 1 vCPU, 3GB RAM & 50GB disk.
+* Tested ([see screencast](https://asciinema.org/a/AqZUQgakqMAErdWqoDc9b3dyS)) **Ubuntu 16-20.04 LTS servers**, with (minimally) 1 vCPU, 4GB RAM & 50GB disk (note that Ubuntu 20 has wonky DNS that may affect installation).
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit
-* Windows endpoints needs TCP port 2222 & 8888 to reach backend (Pls check firewall(s) settings)
+* Windows endpoints needs TCP port 2222 & 8888 to reach backend (Pls check firewall(s) settings, eg. after backend installing, use Windows endpoint to visit http://YOURBACKEND:88888)
 
 ## Installation Steps
-With a sudoer account (but **DO NOT preceed command with `sudo`**), install the backend with: 
+*DO NOT preceed with `sudo` **for Ubuntu/Debian & MacOS** (start a shell session & run the following):*
 
 `curl -L https://github.com/jymcheong/OpenEDR/tarball/master | tar xz && mv jymcheong* openEDR && cd openEDR && ./install.sh`
 
-**PLEASE USE A UBUNTU 16-20 SERVER, either physical or Virtual Machine.** [But why not on Ubuntu/whatever-linux desktop directly?](https://github.com/jymcheong/OpenEDR/issues/15)
+*For **Windows Pro+ with WSL2 & Docker installed***, start a Powershell session, copy & run the following:
 
-Use the output from the backend installation script looks similar to the following: 
+`$tmp = New-TemporaryFile | Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru; Invoke-WebRequest -OutFile $tmp https://github.com/jymcheong/OpenEDR/zipball/master; $tmp | Expand-Archive -DestinationPath .\ ; Move-Item jym* openedr ; $tmp | Remove-Item; cd openedr; get-content -raw .\install.ps1 | iex` 
+
+### Select IP Addresses for SFTP Receiver & Monitoring Frontends
+
+The installation scripts (regardless Windows or non-Windows) will prompt you to select addresses for the two stated purpose. 
+
+- Windows endpoints installed with host-agents will upload to the SFTP Receiver via that selected IP
+- To access OrientDB & Alert monitoring web interfaces, select an address *preferably from a different interface* from the SFTP Receiver.
+
+Kudos to [YJ's contribution for this enhancement](https://www.notion.so/jymcheong/Prompt-IP-address-selection-during-backend-installation-b1d21b69cc3c4e3aad98802f0a71ba1d).
+
+### Testing Connection... 
+
+Simply visit:
 
 ```
-$SFTPCONFURL='http://<YOUR_IP_ADDRESS>:8888/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))
+http://<YOUR_SFTP_RECEIVER_IP>:8888/
 ```
 
-It is a powershell command  that can be pasted to endpoint for host agent installations. **Please use admin powershell session**.
+**If the page does not load, it means there's some connectivity issues to resolve.** 
 
-Other installation scenarios: https://github.com/jymcheong/OpenEDR/wiki/0.-Installation
+Otherwise you will see Powershell commands for installing host agents. The first command sets the path to the SFTP configuration zip file.
+
+### Use Powershell commands to install host agents
+
+**Please use admin powershell session to run those commands**.
+
+## Other installation scenarios
+
+https://github.com/jymcheong/OpenEDR/wiki/0.-Installation
 
 ## Run a Quick Test!
 https://github.com/jymcheong/OpenEDR/wiki/3.-Detection-&-False-Positives
+
+# Shout-Outs
+
+To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
+
+# 
