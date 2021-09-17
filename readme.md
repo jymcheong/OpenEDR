@@ -21,7 +21,7 @@ Click thumbnail below to watch:
 
 ### Select IP Addresses for SFTP Receiver & Monitoring Frontends
 
-The installation scripts (regardless Windows or non-Windows) will prompt you to select addresses for the two stated purpose. 
+The installation scripts (regardless Windows or non-Windows) will prompt you to select addresses for the two stated purposes. 
 
 - Windows endpoints installed with host-agents will upload to the SFTP Receiver via that selected IP
 - To access OrientDB & Alert monitoring web interfaces, select an address *preferably from a different interface* from the SFTP Receiver.
