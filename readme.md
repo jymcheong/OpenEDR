@@ -40,6 +40,8 @@ http://<YOUR_SFTP_RECEIVER_IP>:8888/
 
 **If the page does not load, it means there's some connectivity issues to resolve.** 
 
+![connectivityTest](connectivityTest.png)
+
 Otherwise you will see Powershell commands for installing host agents. **Copy everything.**
 
 ### Use Powershell  to install host agents
@@ -48,7 +50,7 @@ Otherwise you will see Powershell commands for installing host agents. **Copy ev
 
 Go **your backend** (NOT the Windows endpoint), use `docker logs -f orientdb` & you should see something like this:
 
-![Screenshot 2021-09-17 at 9.08.01 AM](./orientdbLogging.png)
+![Screenshot 2021-09-17 at 9.08.01 AM](orientdbLogging.png)
 
 - This is the log console of OrientDB where all the events are stored
 - It is useful for **single** endpoint exploration, for instance as a pen-tester, you can see in real-time what kind of process sequence as a result of executing your payload.
