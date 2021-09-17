@@ -6,6 +6,7 @@
 # cd into new directory
 # ./install.sh
 
+COMPOSECMD="docker-compose"
 if ! command -v docker &> /dev/null
 then
     echo "docker is missing! Please install to proceed further."
@@ -14,8 +15,8 @@ fi
 
 if ! command -v docker-compose &> /dev/null
 then
-    echo "docker-compose is missing! Please install to proceed further."
-    exit
+    echo "docker-compose is missing! Assuming 'docker compose'..."
+    COMPOSECMD="docker compose"
 fi
 
 # Set default to 127.0.0.1
@@ -102,10 +103,11 @@ echo "SAMPLES_ARCHIVE_PATH=./backend/sftp/samplearchive" >> .env
 echo $SFTP_IP > ./backend/sftp/IPaddresses
 
 # docker-compose will take care of the rest of the services
-sudo docker-compose up -d
+sudo $COMPOSECMD up -d
 
 MSG="\$SFTPCONFURL='http://$SFTP_IP:$SFTPCONF_PORT/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))"
-echo $MSG > ./clientconf/index.html
+echo '# Copy the following & paste into an ADMIN powershell session to install host agents:<br>' > ./clientconf/index.html
+echo $MSG >> ./clientconf/index.html
 
 echo ""
 echo "Please copy the LAST line (\$SFTP...), paste into an ADMIN powershell session" 
