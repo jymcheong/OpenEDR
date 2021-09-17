@@ -42,14 +42,22 @@ Otherwise you will see Powershell commands for installing host agents. **Copy ev
 
 ### Use Powershell commands to install host agents
 
-**Please use admin powershell session to run those commands**.
+**Please use admin powershell session to run those commands**. You should REBOOT the Windows endpoint before proceeding...
+
+Go your backend, use `docker logs -f orientdb` & you should see something like this:
+
+![Screenshot 2021-09-17 at 9.08.01 AM](./orientdbLogging.png)
+
+- This is the log console of OrientDB where all the events are stored
+- This is useful for **single** endpoint exploration, for instance as a pen-tester, you can see in real-time what kind of process sequence as a result of executing your payload.
+
+## Run a Quick Test!
+
+https://github.com/jymcheong/OpenEDR/wiki/3.-Detection-&-False-Positives
 
 ## Other installation scenarios
 
 https://github.com/jymcheong/OpenEDR/wiki/0.-Installation
-
-## Run a Quick Test!
-https://github.com/jymcheong/OpenEDR/wiki/3.-Detection-&-False-Positives
 
 # Shout-Outs
 
