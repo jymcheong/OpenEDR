@@ -51,7 +51,7 @@ Go **your backend** (NOT the Windows endpoint), use `docker logs -f orientdb` & 
 ![Screenshot 2021-09-17 at 9.08.01 AM](./orientdbLogging.png)
 
 - This is the log console of OrientDB where all the events are stored
-- This is useful for **single** endpoint exploration, for instance as a pen-tester, you can see in real-time what kind of process sequence as a result of executing your payload.
+- It is useful for **single** endpoint exploration, for instance as a pen-tester, you can see in real-time what kind of process sequence as a result of executing your payload.
 - As a student, you can see the repeated patterns whenever Windows reboot or you fired up typical apps like Browser, MS-Office & so on...
 
 ## Run a Quick Test!
