@@ -67,5 +67,3 @@ https://github.com/jymcheong/OpenEDR/wiki/0.-Installation
 # Shout-Outs
 
 To Microsoft for Sysmon, Nxlog for Nxlog-CE, OrientDB & Wekan!
-
-# 
