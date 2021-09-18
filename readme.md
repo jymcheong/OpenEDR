@@ -13,7 +13,7 @@ Click thumbnail below to watch:
 ## Installation Steps
 *DO NOT preceed with `sudo` **for Ubuntu/Debian & MacOS** (start a shell session & run the following):*
 
-`curl -L https://github.com/jymcheong/OpenEDR/tarball/master | tar xz && mv jymcheong* openEDR && cd openEDR && ./install.sh`
+`curl -L https://github.com/jymcheong/OpenEDR/tarball/master | tar xz && mv jym* openEDR && cd openEDR && ./install.sh`
 
 *For **Windows Pro+ with WSL2 & Docker installed***, start a Powershell session, copy & run the following:
 
