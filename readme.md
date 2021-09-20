@@ -26,7 +26,7 @@ Default Powershell location is user's home folder eg. `C:\Users\yourusername`. I
 The installation scripts (regardless Windows or non-Windows) will prompt you to select addresses for the two stated purposes. 
 
 - Windows endpoints installed with host-agents will upload to the SFTP Receiver via that selected IP
-- To access OrientDB & Alert monitoring web interfaces, select an address *preferably from a different interface* from the SFTP Receiver.
+- To access OrientDB & Alert monitoring web interfaces, select an address *preferably from a different interface & IP* from the SFTP Receiver.
 
 Kudos to [YJ's contribution for this enhancement](https://www.notion.so/jymcheong/Prompt-IP-address-selection-during-backend-installation-b1d21b69cc3c4e3aad98802f0a71ba1d).
 
