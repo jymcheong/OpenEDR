@@ -28,6 +28,8 @@ You can install OpenEDR backend on **directly on** **Linux, MacOS (need a sudoer
 
 `$tmp = New-TemporaryFile | Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru; Invoke-WebRequest -OutFile $tmp https://github.com/jymcheong/OpenEDR/zipball/master; $tmp | Expand-Archive -DestinationPath .\ ; Move-Item jym* openedr ; $tmp | Remove-Item; cd openedr; get-content -raw .\install.ps1 | iex` 
 
+The respective installation script will setup an .env file necessary for OpenEDR backend containers to run.
+
 ### Select IP Addresses for SFTP Receiver & Monitoring Frontends
 
 The installation script *will prompt you to select addresses* for the two stated purposes: (1) receiving events & (2) access web interfaces. 
