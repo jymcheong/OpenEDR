@@ -13,6 +13,8 @@ You can install OpenEDR backend on **directly on** **Ubuntu/Debian, MacOS (need 
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit (we monitor these 'endpoints')
 * Windows endpoints needs to reach backend TCP port 2222 & 8888 
 
+Backend installation completed > check connectivity from endpoint > install endpoint agents
+
 ## Installation Steps
 **DO NOT preceed** with `sudo` **for Ubuntu/Debian & MacOS**, start a shell session & run the following:
 
