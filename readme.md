@@ -7,6 +7,8 @@ Click thumbnail below to watch:
 
 ![directInstallation](directInstallation.png)
 
+If you install backend **within a separate Linux VM**, **please ensure the Win 10 VM is using a network that can reach the backend VM**.
+
 ## Overview
 
 You can install OpenEDR backend on **directly on** **Ubuntu/Debian, MacOS (need a sudoer account**) or Windows Pro (or beyond) with **docker installed**, or within a Ubuntu/Debian **V**irtual **M**achine (you need to install latest Docker within the VM) with the following specs: 
@@ -15,14 +17,10 @@ You can install OpenEDR backend on **directly on** **Ubuntu/Debian, MacOS (need 
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit (we monitor these 'endpoints')
 * Windows endpoints needs to reach backend TCP port 2222 & 8888 
 
-Backend installation completed > check connectivity from endpoint > install endpoint agents
-
 ## Installation Steps
 **DO NOT preceed** with `sudo` **for Ubuntu/Debian & MacOS**, start a shell session & run the following:
 
 `curl -L https://github.com/jymcheong/OpenEDR/tarball/master | tar xz && mv jym* openEDR && cd openEDR && ./install.sh`
-
-
 
 *For **Windows Pro+ with [WSL2 & Docker installed](https://docs.docker.com/desktop/windows/wsl/)***, start a Powershell session, copy & run the following:
 
@@ -32,14 +30,15 @@ Default Powershell location is user's home folder eg. `C:\Users\yourusername`. I
 
 ### Select IP Addresses for SFTP Receiver & Monitoring Frontends
 
-The installation script will prompt you to select addresses for the two stated purposes. 
+The installation script *will prompt you to select addresses* for the two stated purposes. 
 
-- Windows endpoints installed with host-agents will upload to the SFTP Receiver via that selected IP
+- Windows endpoints host-agents will upload events to the SFTP Receiver via that selected IP
 - To access OrientDB & Alert monitoring web interfaces, select an address *preferably from a different interface* from the SFTP Receiver.
+- You may choose the SAME IP (not 127.0.0.1) for testing or exploration.
 
 Kudos to [YJ's contribution for this enhancement](https://www.notion.so/jymcheong/Prompt-IP-address-selection-during-backend-installation-b1d21b69cc3c4e3aad98802f0a71ba1d).
 
-### Testing Connection between Windows endpoint -> Backend
+### Testing Connection between Windows Endpoint -> Backend
 
 Simply visit:
 
@@ -51,11 +50,9 @@ http://<YOUR_SFTP_RECEIVER_IP>:8888/
 
 ![connectivityTest](connectivityTest.png)
 
+### Installing host agents on Windows Endpoints
 
-
-### Use Powershell  to install host agents
-
-**Paste into an admin powershell session to run those commands**. You should REBOOT the Windows endpoint before proceeding...
+**Paste into an admin powershell session to run those commands**. **You should REBOOT the Windows endpoint before proceeding...**
 
 Go **your backend** (NOT the Windows endpoint), use `docker logs -f orientdb` & you should see something like this:
 
