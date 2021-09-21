@@ -20,7 +20,7 @@ You can install OpenEDR backend on **directly on** **Linux, MacOS (need a sudoer
 * Windows endpoints needs to reach backend TCP port 2222 & 8888 (check for any firewall in-between)
 
 ## Installation Steps
-**For Linux & MacOS**, start a shell session & run the following (**DO NOT preceed** with `sudo`):
+**For Linux (tested working on Ubuntu-SERVER 16-20) & MacOS**, start a shell session & run the following (**DO NOT preceed** with `sudo`):
 
 `curl -L https://github.com/jymcheong/OpenEDR/tarball/master | tar xz && mv jym* openEDR && cd openEDR && ./install.sh`
 
