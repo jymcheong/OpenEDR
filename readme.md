@@ -31,7 +31,7 @@ You can install OpenEDR backend on **directly on** **Linux, MacOS (need a sudoer
 The installation script *will prompt you to select addresses* for the two stated purposes. 
 
 - Windows endpoints host-agents will upload events to the SFTP Receiver via that selected IP
-- To access OrientDB & Alert monitoring web interfaces, select an address *preferably from a different interface* from the SFTP Receiver.
+- To access OrientDB (via port 2480) & Alert monitoring web interface (via port 8080), select an address *preferably from a different interface* from the SFTP Receiver.
 - You may choose the SAME IP (not 127.0.0.1) for testing or exploration.
 
 Kudos to [YJ's contribution for this enhancement](https://www.notion.so/jymcheong/Prompt-IP-address-selection-during-backend-installation-b1d21b69cc3c4e3aad98802f0a71ba1d).
