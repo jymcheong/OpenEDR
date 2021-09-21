@@ -26,8 +26,6 @@ You can install OpenEDR backend on **directly on** **Ubuntu/Debian, MacOS (need 
 
 `$tmp = New-TemporaryFile | Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru; Invoke-WebRequest -OutFile $tmp https://github.com/jymcheong/OpenEDR/zipball/master; $tmp | Expand-Archive -DestinationPath .\ ; Move-Item jym* openedr ; $tmp | Remove-Item; cd openedr; get-content -raw .\install.ps1 | iex` 
 
-Default Powershell location is user's home folder eg. `C:\Users\yourusername`. If you did not change directory after launching Powershell sessions, a `C:\Users\yourusername\openedr` folder will be created. 
-
 ### Select IP Addresses for SFTP Receiver & Monitoring Frontends
 
 The installation script *will prompt you to select addresses* for the two stated purposes. 
