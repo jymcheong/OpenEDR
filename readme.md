@@ -5,6 +5,8 @@ Click thumbnail below to watch:
 
 # Getting Started
 
+**Please use official docker installers for respective OSes.** 
+
 ![directInstallation](directInstallation.png)
 
 If you install backend **within a separate Linux VM**, **please ensure the Win 10 VM is using a network that can reach the backend VM**.
