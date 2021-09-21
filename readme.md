@@ -15,7 +15,7 @@ You can install OpenEDR backend on **directly on** **Ubuntu/Debian, MacOS (need 
 
 * 1 vCPU, 4GB RAM & 50GB disk (note that Ubuntu 20 has wonky DNS that may affect installation).
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit (we monitor these 'endpoints')
-* Windows endpoints needs to reach backend TCP port 2222 & 8888 
+* Windows endpoints needs to reach backend TCP port 2222 & 8888 (check for any firewall in-between)
 
 ## Installation Steps
 **DO NOT preceed** with `sudo` **for Ubuntu/Debian & MacOS**, start a shell session & run the following:
