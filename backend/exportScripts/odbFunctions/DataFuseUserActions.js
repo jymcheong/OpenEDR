@@ -11,7 +11,7 @@ DataFuseUserActions
 javascript
 
 //code
-// pre-processing routine called by AddEvent
+// pre-processing routine called by ProcessEvent
 try{
     var db = orient.getDatabase();
     e['_classname'] = 'UserActionTracking'

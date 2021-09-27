@@ -11,7 +11,7 @@ CapturedFile
 javascript
 
 //code
-// called by AddEvent to link CapturedFile to ProcessCreate record
+// called by ProcessEvent to link CapturedFile to ProcessCreate record
 try{
     var db = orient.getDatabase();
     print()

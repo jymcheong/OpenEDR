@@ -11,7 +11,7 @@ Microsoft_Windows_Sysmon
 javascript
 
 //code
-// pre-processing routine called by AddEvent
+// pre-processing routine called by ProcessEvent
 try{  
     var db = orient.getDatabase();
 

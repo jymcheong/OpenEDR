@@ -30,8 +30,10 @@ try{
       sql = 'CREATE EDGE SequenceSighted FROM '+sc[0].field('@rid')+' TO '+ rid
       retry("db.command('" + sql + "')")
     }
-
-    print(r.field('EventTime') + '\n' +  r.field('Organisation') + ' | ' + r.field('Hostname') + ' : ' + seq + '|' + sc[0].field('Count'));
+    if(seq.indexOf('winlogon.exe') > 0 || seq.indexOf('wininit.exe') > 0)
+     print(r.field('EventTime') + '\n' +  r.field('Organisation') + ' | ' + r.field('Hostname') + ' : ' + seq.replace('System > smss.exe > smss.exe > ','... ') + ' | ' + sc[0].field('Count') + ' | ' + rid);     
+   else 
+     print(r.field('EventTime') + '\n' +  r.field('Organisation') + ' | ' + r.field('Hostname') + ' : ' + seq + ' | ' + sc[0].field('Count') + ' | ' + rid);     
 
 }
 catch(err){

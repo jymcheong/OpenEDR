@@ -136,10 +136,10 @@ async function processLine(eventline, organisation) {
  */
 async function checkSession(){
     if(session == null) return;
-    setInterval(async function(){
+    setTimeout(async function dequeue(){
         try {   
             if(session != null) {
-                await session.query('SELECT 1').all();                    
+                await session.query('SELECT dequeue()').all();                    
             }
             else {
                 session = await odb.startSession();
@@ -150,7 +150,8 @@ async function checkSession(){
             console.error(err)
             session = null
         }
-    },3000);
+        setTimeout(dequeue,1000)
+    },1000);
 }
 
 /**

@@ -11,7 +11,7 @@ DataFusionProcMon
 javascript
 
 //code
-// pre-processing routine called by AddEvent
+// pre-processing routine called by ProcessEvent
 e._classname = e.Class; 
 if(e._classname == 'SpoofParentProcessId') print('Spoof found: ' + e.ProcessGuid)
 delete e.Class;

@@ -11,7 +11,7 @@ DataFuseNetwork_v2
 javascript
 
 //code
-// pre-processing routine called by AddEvent
+// pre-processing routine called by ProcessEvent
 try{
     var db = orient.getDatabase();
 
@@ -39,7 +39,7 @@ try{
                        e['Hostname'], e['Organisation'], e['PhysicalAddress'],e['IpAddress'])
     }
 
-    // returning zero tells AddEvent to not continue any further
+    // returning zero tells ProcessEvent to not continue any further
     return 0
 
 }

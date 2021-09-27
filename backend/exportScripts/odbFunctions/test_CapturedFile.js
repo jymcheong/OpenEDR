@@ -20,7 +20,7 @@ var cfEscaped = escape(JSON.stringify(cf))
 print(cfEscaped)
 
 // Simulating a upload instead of just direct INSERT
-AddEvent(cfEscaped)
+ProcessEvent(cfEscaped)
 
 return 1
 
