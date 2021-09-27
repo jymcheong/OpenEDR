@@ -28,19 +28,16 @@ try{
       var parent = db.query('select Sequence from LineageLookup WHERE Organisation = ? AND Hostname = ? AND PID = ? AND Image = ?', 
                             e.Organisation, e.Hostname, e.PPID, e.CreatorProcessName)
       
-      if(parent.length > 0) {
-        var newProcessEXEname = e.NewProcessName.split('\\').reverse()[0];
-        var newSequence = parent[0].field('Sequence') + ' > ' + newProcessEXEname
-        if(newSequence.indexOf('null') < 0) {
-        	e.Sequence = newSequence
-        	db.command('UPDATE LineageLookup set Sequence = ?, Image = ? UPSERT WHERE Organisation = ? AND Hostname = ? AND PID = ?', 
+      if(parent.length == 0) return // will try again when ProcessEvent:ProcessCreate 
+      
+      var newProcessEXEname = e.NewProcessName.split('\\').reverse()[0];
+      var newSequence = parent[0].field('Sequence') + ' > ' + newProcessEXEname
+      if(newSequence.indexOf('null') < 0) {
+      	e.Sequence = newSequence
+        db.command('UPDATE LineageLookup set Sequence = ?, Image = ? UPSERT WHERE Organisation = ? AND Hostname = ? AND PID = ?', 
 						newSequence, e.NewProcessName, e.Organisation, e.Hostname, e.PID)
-        }
-        //print('UpdateLineageLookup: ' + newSequence)
       }
-      else {
-        print('UpdateLineageLookup could not find parent sequence for processPID: ' + e.PID + ' with PPID: ' + e.PPID + ' > ' + e.NewProcessName + ' | Parent ' + e.CreatorProcessName )
-      }
+      //print('UpdateLineageLookup: ' + newSequence)
     }
 }
 catch(err){

@@ -20,7 +20,7 @@ try{
     var db = orient.getDatabase();
     var rid = r.field('@rid')
     
-    print('spoofed PPID processGuid: ' + r.field('ProcessGuid'))
+    print('spoofed parent processGuid: ' + r.field('ProcessGuid'))
     print('True-parent processGuid: ' + r.field('TrueParentProcessGuid'))
 
     // link spoof alert vertex to ProcessCreate

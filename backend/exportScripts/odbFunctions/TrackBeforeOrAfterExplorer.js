@@ -26,12 +26,21 @@ try{
     var IHT_rid = u[0].field('@rid')
 
     // CommandLine tracking
+    function CmdTracking() {
     u = db.command('UPDATE HostUserPrivilegeCommandLine set Count = Count + 1 \
                     UPSERT RETURN AFTER @rid, Count, Score WHERE \
                     Hostname = ? AND Organisation = ? AND User = ? AND CommandLine = ? AND IntegrityLevel = ?',r.field('Hostname'),r.field('Organisation'),r.field('User'),r.field('CommandLine'),r.field('IntegrityLevel'))	
-    var HUPC_rid = u[0].field('@rid')
-
-            // Reboot Tracking
+    
+    }
+    try{
+       CmdTracking()
+    }
+    catch(err){
+       if(err.indexOf('not the latest')) CmdTracking()
+    }
+	var HUPC_rid = u[0].field('@rid')
+    
+    // Reboot Tracking
     if(r.field('ParentImage').indexOf('dfpm.exe') > 0 && r.field('Image').indexOf('shutdown.exe') > 0) {
         retry("db.command('CREATE EDGE Rebooted from "+HUPC_rid+" TO "+r.field('@rid')+"')")
         print(r.field('Hostname') + ' reboot command issued')

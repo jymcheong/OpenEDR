@@ -5,7 +5,7 @@ d
 null
 
 //name
-test
+test_osQuery
 
 //language
 javascript

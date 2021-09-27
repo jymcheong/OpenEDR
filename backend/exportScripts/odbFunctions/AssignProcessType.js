@@ -12,7 +12,7 @@ javascript
 
 //code
 // called by Microsoft_Windows_Sysmon pre-processing function
-// Updates timestamp id (every record has that field added within AddEvent) of first smss.exe & explorer.exe
+// Updates timestamp id (every record has that field added within ProcessEvent) of first smss.exe & explorer.exe
 // 1. any processes with id between these 2 timestamp are considered BeforeExplorer
 // 2. any processes with id after explorer.exe are considered AfterExplorer
 // 3. it also possible to have explorer.exe id < smss.exe id, this means user has yet to sign-in

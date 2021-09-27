@@ -12,7 +12,7 @@ javascript
 
 //code
 // Microsoft_Windows_Security_Auditing function
-// pre-processing routine called by AddEvent
+// pre-processing routine called by ProcessEvent
 try{
     var db = orient.getDatabase();
     if(e.EventID == 4689) e["_classname"] = 'TerminatedProcess4689'

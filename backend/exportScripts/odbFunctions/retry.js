@@ -19,7 +19,7 @@ try {
 }
 catch(err){
 	var e = '' + err
-    if(e.indexOf('UPDATE') > 0) {
+    if(e.indexOf('not the latest') > 0) {
     	print('Retrying ' + command)
     	retry(command)
 	}

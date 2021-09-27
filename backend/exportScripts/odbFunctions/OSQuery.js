@@ -12,7 +12,7 @@ javascript
 
 //code
 try{
-    // pre-processing routine called by AddEvent
+    // pre-processing routine called by ProcessEvent
     var db = orient.getDatabase();
     // handle OSQuery results
     var re = /FROM\s+(.+)\s*/gi

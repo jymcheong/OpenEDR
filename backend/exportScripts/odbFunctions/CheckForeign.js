@@ -11,7 +11,7 @@ CheckForeign
 javascript
 
 //code
-// called by AddEvent to link UntrustedFile to ProcessCreate
+// called by ProcessEvent to link UntrustedFile to ProcessCreate
 try {
     var db = orient.getDatabase();
     var classname = r.field('@class')

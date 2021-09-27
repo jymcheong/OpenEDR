@@ -11,7 +11,7 @@ CheckProcessWatchlist
 javascript
 
 //code
-// called by AddEvent, returns WatchList record if found, else return null
+// called by ProcessEvent, returns WatchList record if found, else return null
 try{
     var db = orient.getDatabase();
     var wpc = db.query('SELECT FROM WatchList WHERE Organisation = ? AND Hostname = ? \
