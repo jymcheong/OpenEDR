@@ -24,7 +24,7 @@ You can install OpenEDR backend on **directly on** **Linux, MacOS (need a sudoer
 
 `curl -L https://github.com/jymcheong/OpenEDR/tarball/master | tar xz && mv jym* openEDR && cd openEDR && ./install.sh`
 
-*For **Windows Pro+ with [WSL2 & Docker installed](https://docs.docker.com/desktop/windows/wsl/)***, start a Powershell session, copy & run the following:
+*For **Windows 10 with [WSL2 (Home) / HyperV (Pro & beyond) & Docker installed](https://docs.docker.com/desktop/windows/wsl/)***, start a Powershell session, copy & run the following:
 
 `$tmp = New-TemporaryFile | Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru; Invoke-WebRequest -OutFile $tmp https://github.com/jymcheong/OpenEDR/zipball/master; $tmp | Expand-Archive -DestinationPath .\ ; Move-Item jym* openedr ; $tmp | Remove-Item; cd openedr; get-content -raw .\install.ps1 | iex` 
 
