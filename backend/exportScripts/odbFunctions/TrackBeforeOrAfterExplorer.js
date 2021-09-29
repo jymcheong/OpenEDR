@@ -36,7 +36,7 @@ try{
        CmdTracking()
     }
     catch(err){
-       if(err.indexOf('not the latest')) CmdTracking()
+       if(('' + err).indexOf('not the latest')) CmdTracking()
     }
 	var HUPC_rid = u[0].field('@rid')
     
@@ -57,7 +57,7 @@ try{
 	}
 }
 catch(err){
-  var msg = 'TrackProcess: ' + err + ' | input: ' + r.field('@rid')
+  var msg = 'TrackBeforeOrAfterExplorer: ' + err + ' | input: ' + r.field('@rid')
   print(msg) 
   db.command('INSERT INTO Errors Set Function = "TrackProcess", Message = ?', msg)
 }

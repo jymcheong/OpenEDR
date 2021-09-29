@@ -12,6 +12,7 @@ var lineCount = 0
 var rowCount = 0
 var fileQueue = []
 var session = null
+var recoverSeqCount = 0
 
 // please quickly start this script after VM starts up
 // ODB cannot cope with too many backlog files
@@ -139,7 +140,11 @@ async function checkSession(){
     setTimeout(async function dequeue(){
         try {   
             if(session != null) {
-                await session.query('SELECT dequeue()').all();                    
+                await session.query('SELECT dequeue()').all();
+                if(recoverSeqCount++ > 59){
+                    recoverSeqCount = 0
+                    session.query('SELECT RecoverSequence()')
+                }                 
             }
             else {
                 session = await odb.startSession();

@@ -18,18 +18,6 @@ var pc = {"EventTime":"2021-04-05 12:10:09","Hostname":"DESKTOP-KTN8LG3","Keywor
 
 AddEvent( escape(JSON.stringify(pc)) )
 
-print(pc['ProcessGuid'])
-
-var r = db.query('SELECT FROM ProcessCreate WHERE ProcessGuid = ? limit 1', pc['ProcessGuid'].toUpperCase())
-
-print('query length: ' + r.length)
-r = r[0]
-
-var s = db.query('SELECT FROM ProcessCreate WHERE ProcessGuid = ? AND Hostname = ? \
-	AND Organisation = ? limit 1', r.field('ProcessGuid'), r.field('Hostname'), r.field('Organisation') )
-
-print('requery length: ' + s.length)
-
-
+// it is expected to see from ODB console: ProcessEvent found parent process with ParentProcessGuid but sequence is null 
  
 
