@@ -5,7 +5,7 @@ Click thumbnail below to watch:
 
 # Getting Started
 
-**Please use official docker installers for respective OSes.** Installation script will prompt for selection of 2 IP addresses. It is alright to select the same IP address for non-production use (eg. evaluation & testing).
+**Please use official docker installers for respective OSes.** Installation script will prompt for selection of 2 IP addresses for SFTP & FRONTEND access.
 
 ![directInstallation](directInstallation.png)
 
