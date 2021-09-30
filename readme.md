@@ -5,22 +5,22 @@ Click thumbnail below to watch:
 
 # Getting Started
 
-**Please use official docker installers for respective OSes.** 
+**Please use official docker installers for respective OSes.** Installation script will prompt for selection of 2 IP addresses. It is alright to select the same IP address for non-production use (eg. evaluation & testing).
 
 ![directInstallation](directInstallation.png)
 
-If you install backend **within a separate Linux VM**, **please ensure the Win 10 VM is using a network that can reach the backend VM**.
+When running backend **within a separate Linux VM**, **please ensure the Win 10 VM is using a network that can reach the backend VM**.
 
 ## Overview
 
-You can install OpenEDR backend on **directly on** **Linux, MacOS (need a sudoer account**) or Windows 10 (Home or beyond) with **docker installed**, or within a Ubuntu/Debian **V**irtual **M**achine (please install latest Docker within the VM) with the following specs: 
+You can install OpenEDR backend services **directly on** **Linux, MacOS (need a sudoer account**) **or Windows 10** (Home or beyond) with **docker installed**, with the following specs: 
 
-* 1 vCPU, 4GB RAM & 50GB disk (note that Ubuntu 20 has wonky DNS that may affect installation).
+* 1 (v)CPU, min. 4GB RAM & 50GB SSD disk
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit (we monitor these 'endpoints')
-* Windows endpoints needs to reach backend TCP port 2222 & 8888 (check for any firewall in-between)
+* Endpoints needs to access backend TCP port 2222 & 8888 (check for any firewall in-between)
 
 ## Installation Steps
-**For Linux (tested working on Ubuntu-SERVER 16-20) & MacOS**, start a shell session & run the following (**DO NOT preceed** with `sudo`):
+**Use a shell on Linux (tested working on Ubuntu-SERVER 16-20) & MacOS**, run the following (**DO NOT preceed** with `sudo`):
 
 `curl -L https://github.com/jymcheong/OpenEDR/tarball/master | tar xz && mv jym* openEDR && cd openEDR && ./install.sh`
 
@@ -34,15 +34,15 @@ The respective installation script will setup an .env file necessary for OpenEDR
 
 The installation script *will prompt you to select addresses* for the two stated purposes: (1) receiving events & (2) access web interfaces. 
 
-- Windows endpoints host-agents will upload events to the SFTP Receiver via that selected IP
-- To access OrientDB (via port 2480) & Alert monitoring web interface (via port 8080), select an address *preferably from a different interface* from the SFTP Receiver.
-- You may choose the SAME IP (not 127.0.0.1) for testing or exploration.
+- Windows endpoints host-agents upload events to the SFTP Receiver via that selected SFTP IP address
+- FRONTEND IP address to access OrientDB (via port 2480) & Alert monitoring web interface (via port 8080)
+- Select the same address for SFTP & FRONTEND for NON-production environment (eg. evaluation & testing)
 
 Kudos to [YJ's contribution for this enhancement](https://www.notion.so/jymcheong/Prompt-IP-address-selection-during-backend-installation-b1d21b69cc3c4e3aad98802f0a71ba1d).
 
 ### Testing Connection between Windows Endpoint -> Backend
 
-Simply visit:
+Simply visit port 8888 for the SFTP IP address (configuration & installation command hosting):
 
 ```
 http://<YOUR_SFTP_RECEIVER_IP>:8888/
