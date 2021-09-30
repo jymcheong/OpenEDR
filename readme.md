@@ -5,17 +5,18 @@ Click thumbnail below to watch:
 
 # Getting Started
 
-**Please use official docker installers for respective OSes.** Installation script will prompt for selection of 2 IP addresses for SFTP & FRONTEND access.
+**Please use official docker installers for respective OSes stated in the diagram below.** Installation script will prompt for selection of 2 IP addresses for SFTP & FRONTEND access.
 
 ![directInstallation](directInstallation.png)
 
-When running backend **within a separate Linux VM**, **please ensure the Win 10 VM is using a network that can reach the backend VM**.
+When running OpenEDR backend **within a separate Linux VM to run docker, please ensure the Win 10 VM is using a network that can reach the backend VM.**
 
-## Overview
+## System Requirements
 
-You can install OpenEDR backend services **directly on** **Linux, MacOS (need a sudoer account**) **or Windows 10** (Home or beyond) with **docker installed**, with the following specs: 
+The host running Linux & MacOS needs a sudoer account, or Windows 10 (Home or beyond), with the following specs: 
 
-* 1 (v)CPU, min. 4GB RAM & 50GB SSD disk
+* i5 or better (1 v)CPU, min. 8GB RAM & 100GB SSD disk for host
+* VM needs at least 1 vCPU, 4GB RAM & 10GB storage
 * Host agents tested on Win10 & Server 2012R2 to 2019 64bit (we monitor these 'endpoints')
 * Endpoints needs to access backend TCP port 2222 & 8888 (check for any firewall in-between)
 
