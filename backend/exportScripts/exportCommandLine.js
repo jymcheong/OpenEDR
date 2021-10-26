@@ -11,7 +11,7 @@ const odb = new (require('../../common/odb').Odb)();
 async function exportFunctions(){
     _session = await odb.startSession()
     var output = '{"records":[';
-    let results = await _session.query("select @this.toJSON() from clc").all();
+    let results = await _session.query("select @this.toJSON() from clc where BaseLined = true").all();
     for(var i = 0; i < results.length; i++) {
         var line = JSON.parse(results[i]['@this.toJSON()']);
         delete line["in_SimilarTo"]

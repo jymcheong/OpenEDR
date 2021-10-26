@@ -43,8 +43,8 @@ function eventHandler(newEvent) {
 }
 
 function newCluster(hupc){
-    _session.command('INSERT INTO CommandLineCluster SET CommandLine = :c', 
-    { params : {c: hupc['CommandLine']}})
+    _session.command('INSERT INTO CommandLineCluster SET CommandLine = :c, Program = :p', 
+    { params : {c: hupc['CommandLine'], p:hupc['Program']}})
     .on('data',(cc) =>{
         _session.command('CREATE EDGE SimilarTo FROM :h TO :c',
         { params : {h: hupc['@rid'], c: cc['@rid']}})
@@ -57,7 +57,7 @@ function newCluster(hupc){
 function processQitem() {
     if(_hupcQ.length == 0) return 
     var hupc = _hupcQ.shift()
-    _session.query("select from CommandLineCluster")
+    _session.query("select from CommandLineCluster WHERE Program = :p", { params : {p: hupc['Program']}})
     .all()
     .then((results)=>{
         var found = false
@@ -67,6 +67,7 @@ function processQitem() {
             var similarity = jw(hupc['CommandLine'],results[i]['CommandLine'])
             if(similarity > _threshold) {
                 found = true;
+                // we want the highest similarity
                 if(similarity > prevSimilarity) {
                     clusterid = results[i]['@rid']
                     prevSimilarity = similarity
@@ -82,7 +83,7 @@ function processQitem() {
             })
         }
         else {
-            console.log('Need to create new cluster!')
+            console.log('Need to create new cluster for: ' + hupc['CommandLine'])
             newCluster(hupc)
         }
     })

@@ -147,8 +147,7 @@ function linkSimilarTo(startRID, endRID) {
 /// returns existing score or 30 for new Commandline cluster
 function findCommandLineCluster(hupc){
     return new Promise( async(resolve, reject) => {
-        var s = hupc['CommandLine'].length > 4 ? hupc['CommandLine'].substring(0,3) : hupc['CommandLine']
-        _session.query('select from CommandLineCluster WHERE CommandLine LIKE :c',{ params : {c: s + '%' }})
+        _session.query("select from CommandLineCluster WHERE Program = :p", { params : {p: hupc['Program']}})
         .all() 
         .then((results)=>{
             var found = false
@@ -159,7 +158,8 @@ function findCommandLineCluster(hupc){
                 var similarity = jw(hupc['CommandLine'],results[i]['CommandLine'])
                 if(similarity > _threshold) {
                     found = true;
-                    if(similarity > prevSimilarity) {
+                    // we want the highest similarity
+                    if(similarity > prevSimilarity) { 
                         clusterid = results[i]['@rid']
                         clusterscore = results[i]['Score']
                         prevSimilarity = similarity

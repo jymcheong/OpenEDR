@@ -27,12 +27,17 @@ try{
 
     // CommandLine tracking
     function CmdTracking() {
-    u = db.command('UPDATE HostUserPrivilegeCommandLine set Count = Count + 1 \
+       var program = '' + r.field('Image')
+       program = program.split('\\').reverse()[0].toLowerCase()
+       // this strips away versioning info in file name
+       if(program.replace('.exe','').indexOf('.') > 0) program = program.replace('.exe','').replace(/[0-9]/g,'').replace(/[.]/g,'') + '.exe'
+       u = db.command('UPDATE HostUserPrivilegeCommandLine set Count = Count + 1 \
                     UPSERT RETURN AFTER @rid, Count, Score WHERE \
-                    Hostname = ? AND Organisation = ? AND User = ? AND CommandLine = ? AND IntegrityLevel = ?',r.field('Hostname'),r.field('Organisation'),r.field('User'),r.field('CommandLine'),r.field('IntegrityLevel'))	
+                    Hostname = ? AND Organisation = ? AND User = ? AND CommandLine = ? AND IntegrityLevel = ? AND Program = ? ',r.field('Hostname'),r.field('Organisation'),r.field('User'),r.field('CommandLine'),r.field('IntegrityLevel'), program)	
     
     }
     try{
+
        CmdTracking()
     }
     catch(err){
