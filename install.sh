@@ -15,7 +15,11 @@ fi
 
 if ! command -v docker-compose &> /dev/null
 then
-    echo "docker-compose is missing! Assuming 'docker compose'..."
+    if ! docker --help |grep -q "compose";
+    then
+        echo 'Please install docker-compose or a version of docker with compose option!'
+        exit
+    fi
     COMPOSECMD="docker compose"
 fi
 
