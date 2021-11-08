@@ -20,7 +20,8 @@ var db = orient.getDatabase()
 
 var p = db.query('select from processcreate where NOT Sequence like "System%" AND NOT ProcessType = "Orphan" order by id desc')
 
-print('\n\n========Start Sequence Recovery=========')
+print('\n\n' + Date())
+print('========Start Sequence Recovery=========')
 if(p.length == 0) {
   print('None affected... nothing to do!')
   return
@@ -77,11 +78,16 @@ function findParent(pc) {
 var total = 0
 for(var i = 0; i < p.length; i++) {
   var s = findParent(p[i])
-  //print('Seq: ' + s + '\n')
-  if(s.length > 0) total++ 
+  if(s.length > 0) {
+     print('Seq: ' + s + '\n')    
+     total++
+     var sql = 'UPDATE ' + p[i].field('@rid') + ' SET Sequence = ?'
+     db.command(sql,s)
+  }
   else {
      print('Missing for: ' + p[i].field('Image') + ' | parent: ' + p[i].field('ParentImage'))
      print('Orphan RID: ' + p[i].field('@rid'))
+     db.command('UPDATE ' + p[i].field('@rid') + ' SET ProcessType = "Orphan"')
      print('========================')
   }
 }
