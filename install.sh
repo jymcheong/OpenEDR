@@ -109,12 +109,12 @@ echo $SFTP_IP > ./backend/sftp/IPaddresses
 # docker-compose will take care of the rest of the services
 sudo $COMPOSECMD up -d
 
-MSG="\$SFTPCONFURL='http://$SFTP_IP:$SFTPCONF_PORT/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))"
-echo '# Copy the following & paste into an ADMIN powershell session to install host agents:<br>' > ./clientconf/index.html
+#MSG="\$SFTPCONFURL='http://$SFTP_IP:$SFTPCONF_PORT/sftpconf.zip'; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'))"
+MSG="start-process -verb runas -Filepath powershell -ArgumentList \"-ExecutionPolicy Bypass\", '-Command \"\$SFTPCONFURL=''http://$SFTP_IP:$SFTPCONF_PORT/sftpconf.zip'';[scriptblock]::Create((New-Object System.Net.WebClient).DownloadString(''https://raw.githubusercontent.com/jymcheong/openedrClient/master/install.ps1'')).Invoke();pause;\"'"
+echo '# Copy the following & run from powershell session to install host agents:<br>' > ./clientconf/index.html
 echo $MSG >> ./clientconf/index.html
 
 echo ""
-echo "Please copy the LAST line (\$SFTP...), paste into an ADMIN powershell session" 
-echo "& press enter to install at Windows endpoints:"
+echo "Please visit http://$($SFTP_IP):$($SFTPCONF_PORT)/ for Windows agents installation instructions."
 echo ""
-echo $MSG
+
