@@ -173,8 +173,8 @@ function findCommandLineCluster(hupc){
                 resolve(clusterscore) // assuming known malicious CommandLine is assigned with score
             }
             else {
-                _session.command('INSERT INTO CommandLineCluster SET CommandLine = :c, Score = ' + _stage2Score, 
-                { params : {c: hupc['CommandLine']}})
+                _session.command('INSERT INTO CommandLineCluster SET CommandLine = :c, Program = :p, Score = ' + _stage2Score, 
+                { params : {c: hupc['CommandLine'], p:hupc['Program']}})
                 .on('data',(cc) =>{
                     linkSimilarTo(hupc['@rid'],cc['@rid'])
                 })
